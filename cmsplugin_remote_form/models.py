@@ -11,7 +11,7 @@ from django.db.models import Model
 from cms.models import CMSPlugin
 from adminsortable.models import SortableMixin
 from jsonfield import JSONField
-from cmsplugin_contact_plus import utils
+from cmsplugin_remote_form import utils
 
 
 def get_default_from_email_address():

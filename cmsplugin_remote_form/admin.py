@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 
 from adminsortable.admin import SortableTabularInline, NonSortableParentAdmin
-from cmsplugin_contact_plus.models import ExtraField, ContactPlus, ContactRecord
+from cmsplugin_remote_form.models import ExtraField, ContactPlus, ContactRecord
 
 from .actions import export_as_csv_action
 

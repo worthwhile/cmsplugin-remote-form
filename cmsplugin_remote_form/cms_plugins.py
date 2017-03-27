@@ -3,9 +3,9 @@ from django.conf import settings
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from cmsplugin_contact_plus.admin import ExtraFieldInline
-from cmsplugin_contact_plus.models import ContactPlus
-from cmsplugin_contact_plus.forms import ContactFormPlus
+from cmsplugin_remote_form.admin import ExtraFieldInline
+from cmsplugin_remote_form.models import ContactPlus
+from cmsplugin_remote_form.forms import ContactFormPlus
 
 
 import time

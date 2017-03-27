@@ -8,9 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from captcha.fields import ReCaptchaField
 from simplemathcaptcha.fields import MathCaptchaField
-from cmsplugin_contact_plus.models import ContactPlus, ContactRecord
-from cmsplugin_contact_plus.signals import contact_message_sent
-from cmsplugin_contact_plus.utils import get_validators
+from cmsplugin_remote_form.models import ContactPlus, ContactRecord
+from cmsplugin_remote_form.signals import contact_message_sent
+from cmsplugin_remote_form.utils import get_validators
 
 class ContactFormPlus(forms.Form):
     required_css_class = getattr(settings, 'CONTACT_PLUS_REQUIRED_CSS_CLASS', 'required')

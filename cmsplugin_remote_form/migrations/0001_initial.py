@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.db.models.deletion
-import cmsplugin_contact_plus.models
+import cmsplugin_remote_form.models
 import jsonfield.fields
 
-from cmsplugin_contact_plus.models import FIELD_TYPE
+from cmsplugin_remote_form.models import FIELD_TYPE
 
 
 class Migration(migrations.Migration):
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
                 ('title', models.CharField(help_text='Title for the Contact Form.', max_length=100, null=True, verbose_name='Title', blank=True)),
-                ('email_subject', models.CharField(default=cmsplugin_contact_plus.models.get_current_site, max_length=256, verbose_name='Email subject')),
+                ('email_subject', models.CharField(default=cmsplugin_remote_form.models.get_current_site, max_length=256, verbose_name='Email subject')),
                 ('recipient_email', models.EmailField(default=b'', max_length=75, verbose_name='Email of recipients')),
                 ('collect_records', models.BooleanField(default=True, help_text='If active, all records for this Form will be stored in the Database.', verbose_name='Collect Records')),
                 ('thanks', models.TextField(verbose_name='Message displayed after submitting the contact form.')),
