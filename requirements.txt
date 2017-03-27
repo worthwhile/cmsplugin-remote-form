@@ -3,3 +3,4 @@ django-simple-math-captcha
 jsonfield
 django-recaptcha
 six
+django-bootstrap3==7.1.0
