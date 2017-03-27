@@ -30,19 +30,19 @@ cmsplugin-contact-plus is licensed under the MIT License.
 
 ## Configuration/Settings
 
-### ``CONTACT_PLUS_FROM_EMAIL``
+### ``REMOTE_FORM_FROM_EMAIL``
 
 Specify ``DEFAULT_FROM_EMAIL`` (https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email) in your projects settings to send emails from a specific address. Otherwise Django's default  'webmaster@localhost' will be used.
 
-### ``CONTACT_PLUS_REPLY_EMAIL_LABEL``
+### ``REMOTE_FORM_REPLY_EMAIL_LABEL``
 
-To set the reply-to header for the email automatically, specify ``CONTACT_PLUS_REPLY_EMAIL_LABEL`` in your project settings. If the label is "your email" for example, then set ``CONTACT_PLUS_REPLY_EMAIL_LABEL='your-email'`` - basically it's the slugified field label that is used to look up the reply-to email address.
+To set the reply-to header for the email automatically, specify ``REMOTE_FORM_REPLY_EMAIL_LABEL`` in your project settings. If the label is "your email" for example, then set ``REMOTE_FORM_REPLY_EMAIL_LABEL='your-email'`` - basically it's the slugified field label that is used to look up the reply-to email address.
 
-### ``CONTACT_PLUS_SEND_COPY_TO_REPLY_EMAIL``
+### ``REMOTE_FORM_SEND_COPY_TO_REPLY_EMAIL``
 
-To send a carbon copy to the submitter you can set the ``CONTACT_PLUS_SEND_COPY_TO_REPLY_EMAIL`` to `True`. If a Field with the label `email` exists this email will be used as Cc Header.
+To send a carbon copy to the submitter you can set the ``REMOTE_FORM_SEND_COPY_TO_REPLY_EMAIL`` to `True`. If a Field with the label `email` exists this email will be used as Cc Header.
 
-### ``CONTACT_PLUS_REQUIRED_CSS_CLASS``
+### ``REMOTE_FORM_REQUIRED_CSS_CLASS``
 
 Defines the required CSS class, default is `required`.
 
@@ -119,7 +119,7 @@ Please have a look at the latest commits for the work-in-progress development ve
 - Added a CharFieldWithValidator field that supports validators
 - Use email subject defined in plugin settings
 - Set `required_css_class` of contact form
-- Use more specific setting `CONTACT_PLUS_FROM_EMAIL`, and use `DEFAULT_FROM_EMAIL` as a fallback
+- Use more specific setting `REMOTE_FORM_FROM_EMAIL`, and use `DEFAULT_FROM_EMAIL` as a fallback
 
 ### 1.2.5 - 10. 11. 2015
 
@@ -174,7 +174,7 @@ Please have a look at the latest commits for the work-in-progress development ve
 - Multiple templates support, in your project settings define
 
 	```
-	CMSPLUGIN_CONTACT_PLUS_TEMPLATES = [
+	CMSPLUGIN_REMOTE_FORM_TEMPLATES = [
 		('cmsplugin_remote_form/contact.html', 'contact.html'),
 		('cmsplugin_remote_form/hello.html', 'hello.html'),
 		# more templates here

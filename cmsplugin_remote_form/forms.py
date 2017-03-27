@@ -13,7 +13,7 @@ from cmsplugin_remote_form.signals import contact_message_sent
 from cmsplugin_remote_form.utils import get_validators
 
 class ContactFormPlus(forms.Form):
-    required_css_class = getattr(settings, 'CONTACT_PLUS_REQUIRED_CSS_CLASS', 'required')
+    required_css_class = getattr(settings, 'REMOTE_FORM_REQUIRED_CSS_CLASS', 'required')
 
     def __init__(self, contactFormInstance, request, *args, **kwargs):
         super(ContactFormPlus, self).__init__(*args, **kwargs)
@@ -122,16 +122,16 @@ class ContactFormPlus(forms.Form):
         tmp_headers = {}
         cc_list = []
         try:
-            reply_email_label = getattr(settings, 'CONTACT_PLUS_REPLY_EMAIL_LABEL', None)
+            reply_email_label = getattr(settings, 'REMOTE_FORM_REPLY_EMAIL_LABEL', None)
             if reply_email_label is not None:
                 tmp_headers.update({'Reply-To': self.cleaned_data[reply_email_label]})
         except:
             pass
 
         try:
-            cc_address_label = getattr(settings, 'CONTACT_PLUS_REPLY_EMAIL_LABEL', None)
+            cc_address_label = getattr(settings, 'REMOTE_FORM_REPLY_EMAIL_LABEL', None)
             cc_address = self.cleaned_data.get(cc_address_label, None)
-            send_copy = getattr(settings, 'CONTACT_PLUS_SEND_COPY_TO_REPLY_EMAIL', False)
+            send_copy = getattr(settings, 'REMOTE_FORM_SEND_COPY_TO_REPLY_EMAIL', False)
             if cc_address and send_copy:
                 cc_list.append(cc_address)
         except:
@@ -144,7 +144,7 @@ class ContactFormPlus(forms.Form):
                                                                       'instance': instance,
                                                                       }),
             cc=cc_list,
-            from_email=getattr(settings, 'CONTACT_PLUS_FROM_EMAIL', settings.DEFAULT_FROM_EMAIL),
+            from_email=getattr(settings, 'REMOTE_FORM_FROM_EMAIL', settings.DEFAULT_FROM_EMAIL),
             to=[recipient_email, ],
             headers=tmp_headers,
         )

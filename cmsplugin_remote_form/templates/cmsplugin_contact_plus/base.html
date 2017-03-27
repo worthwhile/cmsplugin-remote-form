@@ -12,7 +12,7 @@
                 {% bootstrap_field field field_class=contact.field_class label_class=contact.label_class %}
             {% endfor %}
         {% endblock %}
-		<input type="submit" name="contact_plus_form_{{ contact.id|unlocalize }}" {% if contact.submit_button_text %} value="{{ contact.submit_button_text }}"{% endif %} />
+		<input type="submit" name="remote_form_{{ contact.id|unlocalize }}" {% if contact.submit_button_text %} value="{{ contact.submit_button_text }}"{% endif %} />
 	</form>
 {% elif contact.thanks_in_modal %}
     {% addtoblock 'js-external' %}

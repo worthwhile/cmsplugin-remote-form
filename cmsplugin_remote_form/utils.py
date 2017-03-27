@@ -29,7 +29,7 @@ def autodiscover_templates():
         return TEMPLATES
 
     # override templates from settings
-    override_dir = getattr(settings, 'CMSPLUGIN_CONTACT_PLUS_TEMPLATES', None)
+    override_dir = getattr(settings, 'CMSPLUGIN_REMOTE_FORM_TEMPLATES', None)
     if override_dir:
         return sorted_templates(override_dir)
 
