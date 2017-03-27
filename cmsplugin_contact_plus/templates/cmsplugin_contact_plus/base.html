@@ -1,0 +1,57 @@
+{% load l10n bootstrap3 sekizai_tags staticfiles %}
+
+{% if form %}
+    {% if form.is_multipart %}
+        <form enctype="multipart/form-data" method="POST" action="" class="{% if form_class %}{{ form_class }}{% else %}form{% endif %}">
+    {% else %}
+       <form method="POST" action="" class="{% if form_class %}{{ form_class }}{% else %}form{% endif %}">
+    {% endif %}
+	{% csrf_token %}
+        {% block fields %}
+            {% for field in form %}
+                {% bootstrap_field field field_class=contact.field_class label_class=contact.label_class %}
+            {% endfor %}
+        {% endblock %}
+		<input type="submit" name="contact_plus_form_{{ contact.id|unlocalize }}" {% if contact.submit_button_text %} value="{{ contact.submit_button_text }}"{% endif %} />
+	</form>
+{% elif contact.thanks_in_modal %}
+    {% addtoblock 'js-external' %}
+        <div class="modal fade" id="contact-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div>
+                            <img data-dismiss="modal"
+                                 class="close-icon" src="{% static "images/contact-modal-close.svg" %}" alt=""></div>
+                        <div class="envelope">
+                            <img class="confirm-icon" src="{% static "images/contact-modal-received.svg" %}" alt="">
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        {{ contact.thanks|safe }}
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endaddtoblock %}
+    {% addtoblock 'js-external' %}
+        <script>
+            $(window).load(function () {
+                if (window.location.hash) {
+                    $("#contact-modal").modal();
+                }
+                var recaptcha = document.forms["contact_form"]["g-recaptcha-response"];
+                recaptcha.required = true;
+                recaptcha.oninvalid = function (e) {
+
+                    alert("Please complete the captcha");
+                }
+            });
+        </script>
+    {% endaddtoblock %}
+{% else %}
+	{{ contact.thanks|safe }}
+{% endif %}
