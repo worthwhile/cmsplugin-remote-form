@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cmsplugin_contact_plus', '0003_auto_20161102_1927'),
+        ('cmsplugin_remote_form', '0003_auto_20161102_1927'),
     ]
 
     operations = [

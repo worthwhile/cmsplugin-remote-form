@@ -18,7 +18,7 @@ def long_description():
 version = cmsplugin_remote_form.__version__
 
 setup(
-    name='cmsplugin_contact_plus',
+    name='cmsplugin_remote_form',
     version=version,
     packages=find_packages(),
     license='BSD License',

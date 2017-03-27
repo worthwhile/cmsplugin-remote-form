@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('collect_records', models.BooleanField(default=True, help_text='If active, all records for this Form will be stored in the Database.', verbose_name='Collect Records')),
                 ('thanks', models.TextField(verbose_name='Message displayed after submitting the contact form.')),
                 ('submit', models.CharField(max_length=30, verbose_name='Text for the Submit button.', blank=True)),
-                ('template', models.CharField(default=b'cmsplugin_contact_plus/contact.html', max_length=255, editable=False, choices=[(b'cmsplugin_contact_plus/contact.html', b'contact.html')])),
+                ('template', models.CharField(default=b'cmsplugin_remote_form/contact.html', max_length=255, editable=False, choices=[(b'cmsplugin_remote_form/contact.html', b'contact.html')])),
             ],
             options={
                 'verbose_name': 'Contact Plus Form',
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ('date_of_entry', models.DateTimeField(auto_now_add=True)),
                 ('date_processed', models.DateTimeField(help_text=b'Date the Record was processed.', null=True, blank=True)),
                 ('data', jsonfield.fields.JSONField(default={}, null=True, blank=True)),
-                ('contact_form', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, verbose_name='Contact Form', to='cmsplugin_contact_plus.ContactPlus', null=True)),
+                ('contact_form', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, verbose_name='Contact Form', to='cmsplugin_remote_form.ContactPlus', null=True)),
             ],
             options={
                 'ordering': ['date_of_entry', 'contact_form'],
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('initial', models.CharField(max_length=250, null=True, verbose_name='Inital Value', blank=True)),
                 ('required', models.BooleanField(default=True, verbose_name='Mandatory field')),
                 ('widget', models.CharField(help_text='Will be ignored in the current version.', max_length=250, null=True, verbose_name='Widget', blank=True)),
-                ('form', models.ForeignKey(verbose_name='Contact Form', to='cmsplugin_contact_plus.ContactPlus')),
+                ('form', models.ForeignKey(verbose_name='Contact Form', to='cmsplugin_remote_form.ContactPlus')),
             ],
             options={
                 'ordering': ('inline_ordering_position',),

@@ -1,4 +1,4 @@
-# About cmsplugin_contact_plus
+# About cmsplugin_remote_form
 
 [cmsplugin-contact-plus](https://github.com/arteria/cmsplugin-contact-plus/) lets you build forms for your Django CMS project
 with exactly the fields you want in the order you want with a minimal effort.
@@ -10,20 +10,20 @@ cmsplugin-contact-plus is licensed under the MIT License.
 
 ## Quickstart
 
-1. To install from [PyPI](https://pypi.python.org/pypi/cmsplugin_contact_plus/), in your virtualenv run
+1. To install from [PyPI](https://pypi.python.org/pypi/cmsplugin_remote_form/), in your virtualenv run
 
 	```
-	pip install cmsplugin_contact_plus
+	pip install cmsplugin_remote_form
 	```
 
 	or to get the latest commit from GitHub,
 
 	```
-	pip install -e git+git://github.com/arteria/cmsplugin-contact-plus.git#egg=cmsplugin_contact_plus
+	pip install -e git+git://github.com/arteria/cmsplugin-contact-plus.git#egg=cmsplugin_remote_form
 	```
 2. cmsplugin-contact-plus requires https://github.com/iambrandontaylor/django-admin-sortable as dependency. Please have a look at the "Supported Django Versions", "Installation", and "Configuration" sections of the [README](https://github.com/iambrandontaylor/django-admin-sortable/blob/master/README.md).
 
-3. Put ``cmsplugin_contact_plus`` and ``adminsortable`` in your INSTALLED_APPS `settings.py` section and verify that the [ADMINS](https://docs.djangoproject.com/en/dev/ref/settings/#admins) setting is set as well.
+3. Put ``cmsplugin_remote_form`` and ``adminsortable`` in your INSTALLED_APPS `settings.py` section and verify that the [ADMINS](https://docs.djangoproject.com/en/dev/ref/settings/#admins) setting is set as well.
 
 4. Don't forget to migrate your database.
 5. Configure Django's [e-mail settings](https://docs.djangoproject.com/en/1.8/topics/email/#quick-example) appropriately.
@@ -175,8 +175,8 @@ Please have a look at the latest commits for the work-in-progress development ve
 
 	```
 	CMSPLUGIN_CONTACT_PLUS_TEMPLATES = [
-		('cmsplugin_contact_plus/contact.html', 'contact.html'),
-		('cmsplugin_contact_plus/hello.html', 'hello.html'),
+		('cmsplugin_remote_form/contact.html', 'contact.html'),
+		('cmsplugin_remote_form/hello.html', 'hello.html'),
 		# more templates here
     	]
 	```
@@ -233,4 +233,4 @@ Fixed indentation /EOF in setup.py
 Fixed IndentationError in setup.py
 
 ### 1.0.0
-[arteria](https://github.com/arteria/) open sourced cmsplugin_contact_plus unter the MIT License. This plugin was built on a fork of [cmsplugin_contact](https://github.com/rtpm/cmsplugin_contact). Kudos!
+[arteria](https://github.com/arteria/) open sourced cmsplugin_remote_form unter the MIT License. This plugin was built on a fork of [cmsplugin_contact](https://github.com/rtpm/cmsplugin_contact). Kudos!

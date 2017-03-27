@@ -139,7 +139,7 @@ class ContactFormPlus(forms.Form):
 
         email_message = EmailMessage(
             subject=instance.email_subject,
-            body=render_to_string("cmsplugin_contact_plus/email.txt", {'data': self.cleaned_data,
+            body=render_to_string("cmsplugin_remote_form/email.txt", {'data': self.cleaned_data,
                                                                       'ordered_data': ordered_dic_list,
                                                                       'instance': instance,
                                                                       }),

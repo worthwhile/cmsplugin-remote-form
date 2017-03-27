@@ -12,7 +12,7 @@ TEMPLATES = localdata.TEMPLATES
 
 def autodiscover_templates():
     '''
-    Autodiscovers cmsplugin_contact_plus templates the way
+    Autodiscovers cmsplugin_remote_form templates the way
     'django.template.loaders.filesystem.Loader' and
     'django.template.loaders.app_directories.Loader' work.
     '''
@@ -35,7 +35,7 @@ def autodiscover_templates():
 
     templates = []
 #    templates = [
-#        ('cmsplugin_contact_plus/hello.html', 'hello.html'),
+#        ('cmsplugin_remote_form/hello.html', 'hello.html'),
 #    ]
 
     dirs_to_scan = []
@@ -55,7 +55,7 @@ def autodiscover_templates():
                 dirs_to_scan.append(dir)
 
     for dir in dirs_to_scan:
-        found = glob.glob(os.path.join(dir, 'cmsplugin_contact_plus/*.html'))
+        found = glob.glob(os.path.join(dir, 'cmsplugin_remote_form/*.html'))
         for file in found:
             dir, file = os.path.split(file)
             key, value = os.path.join(dir.split('/')[-1], file), file

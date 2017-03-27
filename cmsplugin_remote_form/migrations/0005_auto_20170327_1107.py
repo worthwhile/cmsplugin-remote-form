@@ -7,8 +7,8 @@ from django.db import migrations, models
 
 def forwards(apps, schema_editor):
     try:
-        contact_forms = apps.get_model('cmsplugin_contact_plus', 'ContactPlus')
-        contact_forms.objects.all().update(template="cmsplugin_contact_plus/default.html")
+        contact_forms = apps.get_model('cmsplugin_remote_form', 'ContactPlus')
+        contact_forms.objects.all().update(template="cmsplugin_remote_form/default.html")
     except Exception:
         return
 
@@ -16,7 +16,7 @@ def forwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cmsplugin_contact_plus', '0004_auto_20170301_1534'),
+        ('cmsplugin_remote_form', '0004_auto_20170301_1534'),
     ]
 
     operations = [
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='contactplus',
             name='template',
-            field=models.CharField(choices=[(b'cmsplugin_contact_plus/base.html', b'base.html'), (b'cmsplugin_contact_plus/change_form.html', b'change_form.html'), (b'cmsplugin_contact_plus/default.html', b'default.html'), (b'cmsplugin_contact_plus/inline.html', b'inline.html')], default=b'cmsplugin_contact_plus/default.html', max_length=255),
+            field=models.CharField(choices=[(b'cmsplugin_remote_form/base.html', b'base.html'), (b'cmsplugin_remote_form/change_form.html', b'change_form.html'), (b'cmsplugin_remote_form/default.html', b'default.html'), (b'cmsplugin_remote_form/inline.html', b'inline.html')], default=b'cmsplugin_remote_form/default.html', max_length=255),
         ),
         migrations.RunPython(forwards)
     ]

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cmsplugin_contact_plus', '0001_initial'),
+        ('cmsplugin_remote_form', '0001_initial'),
     ]
 
     operations = [

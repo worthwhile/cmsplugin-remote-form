@@ -24,8 +24,8 @@ class CMSContactPlusPlugin(CMSPluginBase):
     model = ContactPlus
     inlines = [ExtraFieldInline, ]
     name = _('Remote Contact Form')
-    render_template = "cmsplugin_contact_plus/default.html"
-    change_form_template = 'cmsplugin_contact_plus/change_form.html'
+    render_template = "cmsplugin_remote_form/default.html"
+    change_form_template = 'cmsplugin_remote_form/change_form.html'
     cache = False
 
     def render(self, context, instance, placeholder):

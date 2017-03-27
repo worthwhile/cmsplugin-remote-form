@@ -9,7 +9,7 @@ def warn_1_3_changes(app_configs, **kwargs):
             'database and update your templates',
             hint=None,
             obj=None,
-            id='cmsplugin_contact_plus.W001',
+            id='cmsplugin_remote_form.W001',
         )
     ]
 

@@ -18,109 +18,109 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cmsplugin_contact_plus/cms_plugins.py:14
-#: cmsplugin_contact_plus/models.py:83 cmsplugin_contact_plus/models.py:100
+#: cmsplugin_remote_form/cms_plugins.py:14
+#: cmsplugin_remote_form/models.py:83 cmsplugin_remote_form/models.py:100
 msgid "Contact Form"
 msgstr "Formulario de contacto"
 
-#: cmsplugin_contact_plus/forms.py:58 cmsplugin_contact_plus/forms.py:60
+#: cmsplugin_remote_form/forms.py:58 cmsplugin_remote_form/forms.py:60
 msgid "No referral available."
 msgstr "Remisión no disponible"
 
-#: cmsplugin_contact_plus/forms.py:71
+#: cmsplugin_remote_form/forms.py:71
 msgid "Key/value parameter not available."
 msgstr "Parametro para clave/valor no disponible"
 
-#: cmsplugin_contact_plus/models.py:31
+#: cmsplugin_remote_form/models.py:31
 msgid "Contact form message from {}"
 msgstr "Mensaje de formulario para {}"
 
-#: cmsplugin_contact_plus/models.py:34
+#: cmsplugin_remote_form/models.py:34
 msgid "Title"
 msgstr "Título"
 
-#: cmsplugin_contact_plus/models.py:34
+#: cmsplugin_remote_form/models.py:34
 msgid "Title for the Contact Form."
 msgstr "Título para el formulario de contacto"
 
-#: cmsplugin_contact_plus/models.py:36
+#: cmsplugin_remote_form/models.py:36
 msgid "Email subject"
 msgstr "Asunto del correo electrónico"
 
-#: cmsplugin_contact_plus/models.py:39
+#: cmsplugin_remote_form/models.py:39
 msgid "Email of recipients"
 msgstr "Correo de los destinatarios "
 
-#: cmsplugin_contact_plus/models.py:41
+#: cmsplugin_remote_form/models.py:41
 msgid "Collect Records"
 msgstr "Recolección de registros"
 
-#: cmsplugin_contact_plus/models.py:41
+#: cmsplugin_remote_form/models.py:41
 msgid "If active, all records for this Form will be stored in the Database."
 msgstr "Si está activo, todos los registros de este formulario serán guardados en la base de datos"
 
-#: cmsplugin_contact_plus/models.py:43
+#: cmsplugin_remote_form/models.py:43
 msgid "Message displayed after submitting the contact form."
 msgstr "Mensaje mostrado despúes de enviar el formulario"
 
-#: cmsplugin_contact_plus/models.py:45
+#: cmsplugin_remote_form/models.py:45
 msgid "Text for the Submit button."
 msgstr "Texto para el botón de enviar"
 
-#: cmsplugin_contact_plus/models.py:65
+#: cmsplugin_remote_form/models.py:65
 #, python-format
 msgid "Contact Plus Form for %s"
 msgstr "Contact Plus Form para %s"
 
-#: cmsplugin_contact_plus/models.py:75
+#: cmsplugin_remote_form/models.py:75
 msgid "CharField as Textarea"
 msgstr "Campo de caracteres como un área de texto"
 
-#: cmsplugin_contact_plus/models.py:76
+#: cmsplugin_remote_form/models.py:76
 msgid "CharField as HiddenInput"
 msgstr "Campo de caracteres oculto"
 
-#: cmsplugin_contact_plus/models.py:77
+#: cmsplugin_remote_form/models.py:77
 msgid "Referral page as HiddenInput"
 msgstr "Página de remisión oculta"
 
-#: cmsplugin_contact_plus/models.py:78
+#: cmsplugin_remote_form/models.py:78
 msgid "GET parameter as HiddenInput"
 msgstr "Parámetros GET ocultos"
 
-#: cmsplugin_contact_plus/models.py:84
+#: cmsplugin_remote_form/models.py:84
 msgid "Label"
 msgstr "Etiqueta"
 
-#: cmsplugin_contact_plus/models.py:87
+#: cmsplugin_remote_form/models.py:87
 msgid "Inital Value"
 msgstr "Valor inicial"
 
-#: cmsplugin_contact_plus/models.py:89
+#: cmsplugin_remote_form/models.py:89
 msgid "Mandatory field"
 msgstr "Campo Obligatorio"
 
-#: cmsplugin_contact_plus/models.py:91
+#: cmsplugin_remote_form/models.py:91
 msgid "Widget"
 msgstr ""
 
-#: cmsplugin_contact_plus/models.py:92
+#: cmsplugin_remote_form/models.py:92
 msgid "Will be ignored in the current version."
 msgstr "Será ignorado en la versión actual"
 
-#: cmsplugin_contact_plus/models.py:102
+#: cmsplugin_remote_form/models.py:102
 msgid "Date the Record was processed."
 msgstr "Fecha de registro fue procesada"
 
-#: cmsplugin_contact_plus/models.py:107
+#: cmsplugin_remote_form/models.py:107
 msgid "Contact Record"
 msgstr "Registro de contacto"
 
-#: cmsplugin_contact_plus/models.py:108
+#: cmsplugin_remote_form/models.py:108
 msgid "Contact Records"
 msgstr "Registros de contacto"
 
-#: cmsplugin_contact_plus/models.py:118
+#: cmsplugin_remote_form/models.py:118
 #, python-format
 msgid "Record for %(contact)s recorded on %(date)s"
 msgstr "Registro para %(contact)s registrados el %(date)s"

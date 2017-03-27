@@ -51,7 +51,7 @@ class ContactPlus(CMSPlugin):
     template = models.CharField(
             max_length=255,
             choices=TEMPLATE_CHOICES,
-            default='cmsplugin_contact_plus/default.html',
+            default='cmsplugin_remote_form/default.html',
             editable=len(TEMPLATE_CHOICES) > 1)
     fields_in_row = models.BooleanField(_('Put Fields in a .row'), default=False)
     field_class = models.CharField(_('CSS class to put on the field.'), blank=True, max_length=50)
