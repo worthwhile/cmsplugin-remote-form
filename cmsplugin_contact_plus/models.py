@@ -1,5 +1,6 @@
 import threading
 
+from urlparse import urlparse
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -37,30 +38,24 @@ def get_current_site():
 
 @python_2_unicode_compatible
 class ContactPlus(CMSPlugin):
-    title = models.CharField(_('Title'),
-            null=True,
-            blank=True,
-            max_length=100,
-            help_text=_("Title for the Contact Form."))
-    email_subject = models.CharField(
-            max_length=256,
-            verbose_name=_("Email subject"),
-            default=get_current_site)
-    recipient_email = models.EmailField(_("Email of recipients"),
-            default=get_default_from_email_address,
-            max_length=254)
-    collect_records = models.BooleanField(_('Collect Records'),
-            default=True,
-            help_text=_("If active, all records for this Form will be stored in the Database."))
-    thanks = models.TextField(_('Message displayed after submitting the contact form.'))
+    post_url = models.CharField(_('Remote URL'), null=True, blank=False, max_length=200,
+            default='#remoteURL')
     submit_button_text = models.CharField(_('Text for the Submit button.'),
             blank=True,
             max_length=30)
+    thanks = models.TextField(_('Message displayed after submitting the contact form.'))
+    thanks_in_modal = models.BooleanField(_('Show Thanks In Modal'), default=True)
+    collect_records = models.BooleanField(_('Collect Records'),
+            default=True,
+            help_text=_("If active, all records for this Form will be stored in the Database."))
     template = models.CharField(
             max_length=255,
             choices=TEMPLATE_CHOICES,
-            default='cmsplugin_contact_plus/contact.html',
+            default='cmsplugin_contact_plus/default.html',
             editable=len(TEMPLATE_CHOICES) > 1)
+    fields_in_row = models.BooleanField(_('Put Fields in a .row'), default=False)
+    field_class = models.CharField(_('CSS class to put on the field.'), blank=True, max_length=50)
+    label_class = models.CharField(_('CSS class to put on the label.'), blank=True, max_length=50)
 
     class Meta:
         verbose_name = "Contact Plus Form"
@@ -74,9 +69,10 @@ class ContactPlus(CMSPlugin):
                 extrafield)
 
     def __str__(self):
-        if self.title:
-            return self.title
-        return _("Contact Plus Form for %s") % self.recipient_email
+        if self.post_url:
+            url_obj = urlparse(self.post_url)
+            return "Remote Contact Form: %s - %s" % (url_obj.netloc, url_obj.path)
+        return _("Remote Contact Form")
 
 
 def recaptcha_installed():
