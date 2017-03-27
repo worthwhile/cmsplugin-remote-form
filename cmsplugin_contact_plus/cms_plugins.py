@@ -23,8 +23,8 @@ class CMSContactPlusPlugin(CMSPluginBase):
     """
     model = ContactPlus
     inlines = [ExtraFieldInline, ]
-    name = _('Contact Form')
-    render_template = "cmsplugin_contact_plus/contact.html"
+    name = _('Remote Contact Form')
+    render_template = "cmsplugin_contact_plus/default.html"
     change_form_template = 'cmsplugin_contact_plus/change_form.html'
     cache = False
 
