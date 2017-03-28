@@ -3,14 +3,15 @@ from django.conf import settings
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from cmsplugin_remote_form.admin import ExtraFieldInline
-from cmsplugin_remote_form.models import RemoteForm
-from cmsplugin_remote_form.forms import RemoteForm as RemoteFormForm
+from .admin import ExtraFieldInline
+from .models import RemoteForm
+from .forms import RemoteForm as RemoteFormForm
 
 
 import time
 
-def handle_uploaded_file(f, ts):    
+
+def handle_uploaded_file(f, ts):
     destination = open('%s/%s' % (settings.MEDIA_ROOT, ts + '-' + f.name), 'wb+')
 
     for chunk in f.chunks():
@@ -23,7 +24,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
     """
     model = RemoteForm
     inlines = [ExtraFieldInline, ]
-    name = _('Remote Contact Form')
+    name = _('Remote Form')
     render_template = "cmsplugin_remote_form/default.html"
     change_form_template = 'cmsplugin_remote_form/change_form.html'
     cache = False
@@ -36,9 +37,9 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
         if request.method == "POST" and "remote_form_" + str(instance.id) in request.POST.keys():
             form = RemoteFormForm(contactFormInstance=instance,
-                              request=request,
-                              data=request.POST,
-                              files=request.FILES)
+                                  request=request,
+                                  data=request.POST,
+                                  files=request.FILES)
             if form.is_valid():
                 ts = str(int(time.time()))
 
