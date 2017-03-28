@@ -1,19 +1,28 @@
 {% load l10n bootstrap3 sekizai_tags staticfiles %}
 
 {% if form %}
-    {% if form.is_multipart %}
-        <form enctype="multipart/form-data" method="POST" action="" class="{% if form_class %}{{ form_class }}{% else %}form{% endif %}">
-    {% else %}
-       <form method="POST" action="" class="{% if form_class %}{{ form_class }}{% else %}form{% endif %}">
-    {% endif %}
-	{% csrf_token %}
+    <form id="remote_form_{{ contact.id }}" method="POST" action=""  data-parsley-validate
+          class="{% if form_layout %}form-{{ form_layout }}{% else %}form{% endif %}">
+        {% csrf_token %}
         {% block fields %}
             {% for field in form %}
-                {% bootstrap_field field field_class=contact.field_class label_class=contact.label_class %}
+                {% if form_layout %}
+                    {% bootstrap_field field layout=form_layout field_class=contact.field_class label_class=contact.label_class %}
+                {% else %}
+                    {% bootstrap_field field field_class=contact.field_class label_class=contact.label_class %}
+                {% endif %}
             {% endfor %}
         {% endblock %}
-		<input type="submit" name="remote_form_{{ contact.id|unlocalize }}" {% if contact.submit_button_text %} value="{{ contact.submit_button_text }}"{% endif %} />
-	</form>
+        {% if form_layout == 'horizontal' %}
+            <div class="form-group">
+                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <input type="submit" class="btn btn-primary " name="remote_form_{{ contact.id|unlocalize }}"
+                            {% if contact.submit_button_text %}value="{{ contact.submit_button_text }}"{% endif %} />
+                </div>
+            </div>
+        {% endif %}
+    </form>
 {% elif contact.thanks_in_modal %}
     {% addtoblock 'js-external' %}
         <div class="modal fade" id="contact-modal">
@@ -42,12 +51,6 @@
             $(window).load(function () {
                 if (window.location.hash) {
                     $("#contact-modal").modal();
-                }
-                var recaptcha = document.forms["contact_form"]["g-recaptcha-response"];
-                recaptcha.required = true;
-                recaptcha.oninvalid = function (e) {
-
-                    alert("Please complete the captcha");
                 }
             });
         </script>
