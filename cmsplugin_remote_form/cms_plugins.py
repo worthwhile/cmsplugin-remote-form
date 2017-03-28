@@ -4,7 +4,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from .admin import ExtraFieldInline
-from .models import RemoteForm
+from .models import RemoteForm as RemoteFormModel
 from .forms import RemoteForm as RemoteFormForm
 
 
@@ -22,7 +22,7 @@ def handle_uploaded_file(f, ts):
 class CMSRemoteFormPlugin(CMSPluginBase):
     """ 
     """
-    model = RemoteForm
+    model = RemoteFormModel
     inlines = [ExtraFieldInline, ]
     name = _('Remote Form')
     render_template = "cmsplugin_remote_form/default.html"

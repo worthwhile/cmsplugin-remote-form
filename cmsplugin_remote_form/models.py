@@ -14,45 +14,29 @@ from jsonfield import JSONField
 from cmsplugin_remote_form import utils
 
 
-def get_default_from_email_address():
-    email_address = ''
-    try:
-        email_address = settings.ADMINS[0][1]
-    except:
-        pass
-
-    return email_address
-
-
 localdata = threading.local()
 localdata.TEMPLATE_CHOICES = utils.autodiscover_templates()
 TEMPLATE_CHOICES = localdata.TEMPLATE_CHOICES
 
 
-def get_current_site():
-    try:
-        current_site = Site.objects.get_current()
-    except:
-        current_site = 'example.com'
-    return _('Contact form message from {}').format(current_site)
-
 @python_2_unicode_compatible
 class RemoteForm(CMSPlugin):
     post_url = models.CharField(_('Remote URL'), null=True, blank=False, max_length=200,
-            default='#remoteURL')
+                                default='#remoteURL')
     submit_button_text = models.CharField(_('Text for the Submit button.'),
-            blank=True,
-            max_length=30)
+                                          blank=True,
+                                          max_length=30)
     thanks = models.TextField(_('Message displayed after submitting the contact form.'))
     thanks_in_modal = models.BooleanField(_('Show Thanks In Modal'), default=True)
     collect_records = models.BooleanField(_('Collect Records'),
-            default=True,
-            help_text=_("If active, all records for this Form will be stored in the Database."))
+                                          default=True,
+                                          help_text=_(
+                                              "If active, all records for this Form will be stored in the Database."))
     template = models.CharField(
-            max_length=255,
-            choices=TEMPLATE_CHOICES,
-            default='cmsplugin_remote_form/default.html',
-            editable=len(TEMPLATE_CHOICES) > 1)
+        max_length=255,
+        choices=TEMPLATE_CHOICES,
+        default='cmsplugin_remote_form/default.html',
+        editable=len(TEMPLATE_CHOICES) > 1)
     fields_in_row = models.BooleanField(_('Put Fields in a .row'), default=False)
     field_class = models.CharField(_('CSS class to put on the field.'), blank=True, max_length=50)
     label_class = models.CharField(_('CSS class to put on the label.'), blank=True, max_length=50)
@@ -132,7 +116,7 @@ class ContactRecord(Model):
     date_processed = models.DateTimeField(null=True, blank=True, help_text=_("Date the Record was processed."))
     data = JSONField(null=True, blank=True, default={})
 
-    class Meta():
+    class Meta:
         ordering = ['date_of_entry', 'contact_form', ]
         verbose_name = _("Contact Record")
         verbose_name_plural = _("Contact Records")
@@ -145,6 +129,5 @@ class ContactRecord(Model):
             return False
 
     def __str__(self):
-        return _(u"Record for %(contact)s recorded on %(date)s") % {'contact':self.contact_form,
-                                                                   'date': self.date_of_entry.strftime('%d. %b %Y') }
-
+        return _(u"Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
+                                                                    'date': self.date_of_entry.strftime('%d. %b %Y')}
