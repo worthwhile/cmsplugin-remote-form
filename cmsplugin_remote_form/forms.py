@@ -80,7 +80,7 @@ class RemoteForm(forms.Form):
                                                 required=True)
                 elif extraField.fieldType == 'ReCaptcha':
                     self.fields[slugify(extraField.label)] = ReCaptchaField(
-                                                label=extraField.label,
+                                                label='',
                                                 initial=extraField.initial,
                                                 required=True)
                 elif extraField.fieldType == 'auto_GET_parameter':
