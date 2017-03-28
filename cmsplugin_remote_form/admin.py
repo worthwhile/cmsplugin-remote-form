@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 
 from adminsortable.admin import SortableTabularInline, NonSortableParentAdmin
-from cmsplugin_remote_form.models import ExtraField, ContactPlus, ContactRecord
+from cmsplugin_remote_form.models import ExtraField, RemoteForm, ContactRecord
 
 from .actions import export_as_csv_action
 
@@ -11,8 +11,8 @@ class ExtraFieldInline(SortableTabularInline):
     fields = ('label', 'fieldType', 'initial', 'required')
 
 
-class ContactFormPlusAdmin(NonSortableParentAdmin):
-    model = ContactPlus
+class RemoteFormAdmin(NonSortableParentAdmin):
+    model = RemoteForm
     inlines = (ExtraFieldInline, )
 
 
@@ -28,4 +28,4 @@ class ContactRecordAdmin(admin.ModelAdmin):
 admin.site.register(ExtraField)
 
 admin.site.register(ContactRecord, ContactRecordAdmin)
-admin.site.register(ContactPlus, ContactFormPlusAdmin)
+admin.site.register(RemoteForm, RemoteFormAdmin)

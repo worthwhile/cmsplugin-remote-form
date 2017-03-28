@@ -8,15 +8,15 @@ from django.utils.translation import ugettext_lazy as _
 
 from captcha.fields import ReCaptchaField
 from simplemathcaptcha.fields import MathCaptchaField
-from cmsplugin_remote_form.models import ContactPlus, ContactRecord
+from cmsplugin_remote_form.models import RemoteForm, ContactRecord
 from cmsplugin_remote_form.signals import contact_message_sent
 from cmsplugin_remote_form.utils import get_validators
 
-class ContactFormPlus(forms.Form):
+class RemoteForm(forms.Form):
     required_css_class = getattr(settings, 'REMOTE_FORM_REQUIRED_CSS_CLASS', 'required')
 
     def __init__(self, contactFormInstance, request, *args, **kwargs):
-        super(ContactFormPlus, self).__init__(*args, **kwargs)
+        super(RemoteForm, self).__init__(*args, **kwargs)
         if 'instance' not in kwargs:
             for extraField in contactFormInstance.extrafield_set.all():
                 if extraField.fieldType == 'CharField':
@@ -102,7 +102,7 @@ class ContactFormPlus(forms.Form):
     def send(self, recipient_email, request, ts, instance=None, multipart=False):
         current_site = Site.objects.get_current()
         if instance:
-            order = ContactPlus.objects.get(id=instance.id).extrafield_set.order_by('inline_ordering_position')
+            order = RemoteForm.objects.get(id=instance.id).extrafield_set.order_by('inline_ordering_position')
             excluded_field_types = ['MathCaptcha', 'ReCaptcha']
             order = [field for field in order if field.fieldType not in excluded_field_types]
             ordered_dic_list = []

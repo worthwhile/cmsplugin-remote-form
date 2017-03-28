@@ -69,8 +69,8 @@ msgstr "Texto para el botón de enviar"
 
 #: cmsplugin_remote_form/models.py:65
 #, python-format
-msgid "Contact Plus Form for %s"
-msgstr "Contact Plus Form para %s"
+msgid "Remote Form for %s"
+msgstr "Remote Form para %s"
 
 #: cmsplugin_remote_form/models.py:75
 msgid "CharField as Textarea"

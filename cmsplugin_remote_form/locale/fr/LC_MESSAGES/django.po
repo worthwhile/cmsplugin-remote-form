@@ -71,8 +71,8 @@ msgstr "Texte du bouton « soumettre »."
 
 #: cmsplugin_remote_form/models.py:65
 #, python-format
-msgid "Contact Plus Form for %s"
-msgstr "Contact Plus Form pour %s"
+msgid "Remote Form for %s"
+msgstr "Remote Form pour %s"
 
 #: cmsplugin_remote_form/models.py:75
 msgid "CharField as Textarea"

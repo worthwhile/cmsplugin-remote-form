@@ -4,8 +4,8 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from cmsplugin_remote_form.admin import ExtraFieldInline
-from cmsplugin_remote_form.models import ContactPlus
-from cmsplugin_remote_form.forms import ContactFormPlus
+from cmsplugin_remote_form.models import RemoteForm
+from cmsplugin_remote_form.forms import RemoteForm as RemoteFormForm
 
 
 import time
@@ -18,10 +18,10 @@ def handle_uploaded_file(f, ts):
     destination.close()
     
     
-class CMSContactPlusPlugin(CMSPluginBase):
+class CMSRemoteFormPlugin(CMSPluginBase):
     """ 
     """
-    model = ContactPlus
+    model = RemoteForm
     inlines = [ExtraFieldInline, ]
     name = _('Remote Contact Form')
     render_template = "cmsplugin_remote_form/default.html"
@@ -35,10 +35,10 @@ class CMSContactPlusPlugin(CMSPluginBase):
             self.render_template = instance.template
 
         if request.method == "POST" and "remote_form_" + str(instance.id) in request.POST.keys():
-            form = ContactFormPlus(contactFormInstance=instance, 
-                    request=request, 
-                    data=request.POST, 
-                    files=request.FILES)
+            form = RemoteFormForm(contactFormInstance=instance,
+                              request=request,
+                              data=request.POST,
+                              files=request.FILES)
             if form.is_valid():
                 ts = str(int(time.time()))
 
@@ -58,7 +58,7 @@ class CMSContactPlusPlugin(CMSPluginBase):
                 })
 
         else:
-            form = ContactFormPlus(contactFormInstance=instance, request=request)
+            form = RemoteFormForm(contactFormInstance=instance, request=request)
             context.update({
                     'contact': instance,
                     'form': form,
@@ -66,4 +66,4 @@ class CMSContactPlusPlugin(CMSPluginBase):
         return context
 
 
-plugin_pool.register_plugin(CMSContactPlusPlugin)
+plugin_pool.register_plugin(CMSRemoteFormPlugin)

@@ -37,7 +37,7 @@ def get_current_site():
     return _('Contact form message from {}').format(current_site)
 
 @python_2_unicode_compatible
-class ContactPlus(CMSPlugin):
+class RemoteForm(CMSPlugin):
     post_url = models.CharField(_('Remote URL'), null=True, blank=False, max_length=200,
             default='#remoteURL')
     submit_button_text = models.CharField(_('Text for the Submit button.'),
@@ -58,8 +58,8 @@ class ContactPlus(CMSPlugin):
     label_class = models.CharField(_('CSS class to put on the label.'), blank=True, max_length=50)
 
     class Meta:
-        verbose_name = "Contact Plus Form"
-        verbose_name_plural = "Contact Plus Forms"
+        verbose_name = "Remote Form"
+        verbose_name_plural = "Remote Forms"
 
     def copy_relations(self, oldinstance):
         for extrafield in ExtraField.objects.filter(form__pk=oldinstance.pk):
@@ -71,8 +71,8 @@ class ContactPlus(CMSPlugin):
     def __str__(self):
         if self.post_url:
             url_obj = urlparse(self.post_url)
-            return "Remote Contact Form: %s - %s" % (url_obj.netloc, url_obj.path)
-        return _("Remote Contact Form")
+            return "Remote Form: %s - %s" % (url_obj.netloc, url_obj.path)
+        return _("Remote Form")
 
 
 def recaptcha_installed():
@@ -103,7 +103,7 @@ if recaptcha_installed():
 class ExtraField(SortableMixin):
     """
     """
-    form = models.ForeignKey(ContactPlus, verbose_name=_("Contact Form"))
+    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"))
     label = models.CharField(_('Label'), max_length=100)
     fieldType = models.CharField(max_length=100, choices=FIELD_TYPE)
     initial = models.CharField(
@@ -127,7 +127,7 @@ class ExtraField(SortableMixin):
 class ContactRecord(Model):
     """
     """
-    contact_form = models.ForeignKey(ContactPlus, verbose_name=_("Contact Form"), null=True, on_delete=models.SET_NULL)
+    contact_form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), null=True, on_delete=models.SET_NULL)
     date_of_entry = models.DateTimeField(auto_now_add=True)
     date_processed = models.DateTimeField(null=True, blank=True, help_text=_("Date the Record was processed."))
     data = JSONField(null=True, blank=True, default={})
