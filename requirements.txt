@@ -2,5 +2,6 @@ django-admin-sortable
 django-simple-math-captcha
 jsonfield
 django-recaptcha
+django-localflavor
 six
 django-bootstrap3==7.1.0
