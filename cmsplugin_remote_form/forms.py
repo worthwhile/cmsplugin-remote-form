@@ -1,16 +1,15 @@
 from django import forms
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
+from django.contrib.sites.models import Site
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from captcha.fields import ReCaptchaField
 from simplemathcaptcha.fields import MathCaptchaField
 from cmsplugin_remote_form.models import RemoteForm, ContactRecord
-from cmsplugin_remote_form.signals import contact_message_sent
 from cmsplugin_remote_form.utils import get_validators
+from localflavor.us.forms import USStateSelect
+
 
 class RemoteForm(forms.Form):
     required_css_class = getattr(settings, 'REMOTE_FORM_REQUIRED_CSS_CLASS', 'required')
@@ -49,6 +48,11 @@ class RemoteForm(forms.Form):
                             required=extraField.required)
                 elif extraField.fieldType == 'IntegerField':
                     self.fields[slugify(extraField.label)] = forms.IntegerField(label=extraField.label,
+                            initial=extraField.initial,
+                            required=extraField.required)
+                elif extraField.fieldType == 'USStateSelect':
+                    self.fields[slugify(extraField.label)] = forms.CharField(widget=USStateSelect,
+                            label=extraField.label,
                             initial=extraField.initial,
                             required=extraField.required)
                 elif extraField.fieldType == 'IPAddressField':
@@ -98,10 +102,9 @@ class RemoteForm(forms.Form):
                         required=extraField.required,
                         validators=get_validators())
 
-
-    def send(self, recipient_email, request, ts, instance=None, multipart=False):
-        current_site = Site.objects.get_current()
-        if instance:
+    def save_record(self, instance, ts):
+        if instance.collect_records:
+            current_site = Site.objects.get_current()
             order = RemoteForm.objects.get(id=instance.id).extrafield_set.order_by('inline_ordering_position')
             excluded_field_types = ['MathCaptcha', 'ReCaptcha']
             order = [field for field in order if field.fieldType not in excluded_field_types]
@@ -109,7 +112,7 @@ class RemoteForm(forms.Form):
             for field in order:
                 key = slugify(field.label)
                 value = self.cleaned_data.get(key, '(no input)')
-                # redefine value for files... 
+                # redefine value for files...
                 if field.fieldType in ["FileField", "ImageField"]:
                     val = ts + '-' + str(value)
                     if settings.MEDIA_URL.startswith("http"):
@@ -118,40 +121,5 @@ class RemoteForm(forms.Form):
                         value = "http://%s%s%s" % (current_site, settings.MEDIA_URL, val)
                 ordered_dic_list.append({field.label: value})
 
-        # Automatically match reply-to email address in form
-        tmp_headers = {}
-        cc_list = []
-        try:
-            reply_email_label = getattr(settings, 'REMOTE_FORM_REPLY_EMAIL_LABEL', None)
-            if reply_email_label is not None:
-                tmp_headers.update({'Reply-To': self.cleaned_data[reply_email_label]})
-        except:
-            pass
-
-        try:
-            cc_address_label = getattr(settings, 'REMOTE_FORM_REPLY_EMAIL_LABEL', None)
-            cc_address = self.cleaned_data.get(cc_address_label, None)
-            send_copy = getattr(settings, 'REMOTE_FORM_SEND_COPY_TO_REPLY_EMAIL', False)
-            if cc_address and send_copy:
-                cc_list.append(cc_address)
-        except:
-            pass
-
-        email_message = EmailMessage(
-            subject=instance.email_subject,
-            body=render_to_string("cmsplugin_remote_form/email.txt", {'data': self.cleaned_data,
-                                                                      'ordered_data': ordered_dic_list,
-                                                                      'instance': instance,
-                                                                      }),
-            cc=cc_list,
-            from_email=getattr(settings, 'REMOTE_FORM_FROM_EMAIL', settings.DEFAULT_FROM_EMAIL),
-            to=[recipient_email, ],
-            headers=tmp_headers,
-        )
-        email_message.send(fail_silently=True)
-
-        if instance.collect_records:# and not multipart:
-            record = ContactRecord(contact_form=instance, data=ordered_dic_list)#self.cleaned_data)
+            record = ContactRecord(contact_form=instance, data=ordered_dic_list)
             record.save()
-
-        contact_message_sent.send(sender=self, data=self.cleaned_data)
