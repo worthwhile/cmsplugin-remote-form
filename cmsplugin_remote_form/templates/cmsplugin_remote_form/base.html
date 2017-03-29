@@ -1,6 +1,6 @@
 {% load l10n bootstrap3 sekizai_tags staticfiles %}
 
-{% if form %}
+{% if not show_thanks or contact.thanks_in_modal %}
     <form id="remote_form_{{ contact.id }}" method="POST" action=""  data-parsley-validate
           class="{% if form_layout %}form-{{ form_layout }}{% else %}form{% endif %}">
         {% csrf_token %}
@@ -23,38 +23,30 @@
             </div>
         {% endif %}
     </form>
-{% elif contact.thanks_in_modal %}
-    {% addtoblock 'js-external' %}
-        <div class="modal fade" id="contact-modal">
+{% else %}
+	{{ contact.thanks|safe }}
+{% endif %}
+
+{% if show_thanks and contact.thanks_in_modal %}
+    {% addtoblock 'js' %}
+        <div class="modal fade" id="remote_form_{{ contact.id }}_thanks_modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <div>
-                            <img data-dismiss="modal"
-                                 class="close-icon" src="{% static "images/contact-modal-close.svg" %}" alt=""></div>
-                        <div class="envelope">
-                            <img class="confirm-icon" src="{% static "images/contact-modal-received.svg" %}" alt="">
-                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         {{ contact.thanks|safe }}
                     </div>
-                    <div class="modal-footer">
-
-                    </div>
+                    <div class="modal-footer"></div>
                 </div>
             </div>
         </div>
-    {% endaddtoblock %}
-    {% addtoblock 'js-external' %}
         <script>
             $(window).load(function () {
-                if (window.location.hash) {
-                    $("#contact-modal").modal();
-                }
+                $("#remote_form_{{ contact.id }}_thanks_modal").modal();
             });
         </script>
     {% endaddtoblock %}
-{% else %}
-	{{ contact.thanks|safe }}
 {% endif %}
