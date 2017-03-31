@@ -38,22 +38,22 @@ class CMSRemoteFormPlugin(CMSPluginBase):
             self.render_template = instance.template
 
         if request.method == "POST" and "remote_form_" + str(instance.id) in request.POST.keys():
-            submission_form = RemoteFormForm(contactFormInstance=instance,
+            ts = str(int(time.time()))
+            submitted_form = RemoteFormForm(contactFormInstance=instance,
                                   request=request,
                                   data=request.POST,
                                   files=request.FILES)
 
-            if submission_form.is_valid():
-                ts = str(int(time.time()))
-                show_thanks = True
-                form.save_record(instance, ts)
-
+            if submitted_form.is_valid():
                 for fl in request.FILES:
                     for f in request.FILES.getlist(fl):
                         handle_uploaded_file(f, ts)
-
+                show_thanks = True
+                submitted_form.save_record(instance, ts)
+                response = submitted_form.post_to_remote(instance, request)
+                self.handle_response(instance, response)
             else:
-                form = submission_form
+                form = submitted_form
 
         context.update({
             'contact': instance,
@@ -61,6 +61,10 @@ class CMSRemoteFormPlugin(CMSPluginBase):
             'show_thanks': show_thanks
         })
         return context
+
+    def handle_response(self, instance, response):
+        test = "test"
+
 
 
 plugin_pool.register_plugin(CMSRemoteFormPlugin)
