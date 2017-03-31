@@ -1,3 +1,6 @@
+
+import requests
+
 from django import forms
 from django.template.defaultfilters import slugify
 from django.contrib.sites.models import Site
@@ -6,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from captcha.fields import ReCaptchaField
 from simplemathcaptcha.fields import MathCaptchaField
-from cmsplugin_remote_form.models import RemoteForm, ContactRecord
+from cmsplugin_remote_form.models import RemoteForm as RemoteFormModel, ContactRecord
 from cmsplugin_remote_form.utils import get_validators
 from localflavor.us.forms import USStateSelect
 
@@ -105,7 +108,7 @@ class RemoteForm(forms.Form):
     def save_record(self, instance, ts):
         if instance.collect_records:
             current_site = Site.objects.get_current()
-            order = RemoteForm.objects.get(id=instance.id).extrafield_set.order_by('inline_ordering_position')
+            order = RemoteFormModel.objects.get(id=instance.id).extrafield_set.order_by('inline_ordering_position')
             excluded_field_types = ['MathCaptcha', 'ReCaptcha']
             order = [field for field in order if field.fieldType not in excluded_field_types]
             ordered_dic_list = []
@@ -123,3 +126,8 @@ class RemoteForm(forms.Form):
 
             record = ContactRecord(contact_form=instance, data=ordered_dic_list)
             record.save()
+
+    def post_to_remote(self, instance, request):
+        remote_url = instance.post_url
+        response = requests.post(remote_url, data=self.cleaned_data, headers={'referer': "asdf"})
+        return response
