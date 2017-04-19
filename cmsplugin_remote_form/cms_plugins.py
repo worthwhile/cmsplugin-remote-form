@@ -26,7 +26,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
     inlines = [ExtraFieldInline, ]
     name = _('Remote Form')
     render_template = "cmsplugin_remote_form/default.html"
-    change_form_template = 'cmsplugin_remote_form/change_form.html'
+    change_form_template = 'cmsplugin_remote_form/admin/change_form.html'
     cache = False
 
     def render(self, context, instance, placeholder):

@@ -34,25 +34,9 @@ def autodiscover_templates():
         return sorted_templates(override_dir)
 
     templates = []
-#    templates = [
-#        ('cmsplugin_remote_form/hello.html', 'hello.html'),
-#    ]
 
-    dirs_to_scan = []
-    if 'django.template.loaders.app_directories.Loader' in settings.TEMPLATE_LOADERS:
-        for app in settings.INSTALLED_APPS:
-            _ = __import__(app)
-            dir = os.path.dirname(_.__file__)
-            if not dir in dirs_to_scan:
-                # append 'templates' for app directories
-                dirs_to_scan.append(os.path.join(dir, 'templates'))
-
-    if 'django.template.loaders.filesystem.Loader' in settings.TEMPLATE_LOADERS:
-        for dir in settings.TEMPLATE_DIRS:
-            if not dir in dirs_to_scan:
-                # filesystem loader assumes our templates in 'templates'
-                # already
-                dirs_to_scan.append(dir)
+    dirs_to_scan = [item for t in settings.TEMPLATES for item in t['DIRS']]
+    dirs_to_scan.append(os.path.join(os.path.dirname(__file__), 'templates'))
 
     for dir in dirs_to_scan:
         found = glob.glob(os.path.join(dir, 'cmsplugin_remote_form/*.html'))
