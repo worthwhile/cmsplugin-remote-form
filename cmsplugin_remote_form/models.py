@@ -37,9 +37,6 @@ class RemoteForm(CMSPlugin):
         choices=TEMPLATE_CHOICES,
         default='cmsplugin_remote_form/default.html',
         editable=True)
-    fields_in_row = models.BooleanField(_('Put Fields in a .row'), default=False)
-    field_class = models.CharField(_('CSS class to put on the field.'), blank=True, max_length=50)
-    label_class = models.CharField(_('CSS class to put on the label.'), blank=True, max_length=50)
 
     class Meta:
         verbose_name = "Remote Form"
@@ -98,6 +95,7 @@ class ExtraField(SortableMixin):
     widget = models.CharField(
         _('Widget'), max_length=250, blank=True, null=True,
         help_text=_("Will be ignored in the current version."))
+    css_class = models.CharField(max_length=250, blank=True, null=True)
 
     inline_ordering_position = models.IntegerField(blank=True, null=True, editable=True)
 

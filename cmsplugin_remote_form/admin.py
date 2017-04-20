@@ -8,7 +8,8 @@ from .actions import export_as_csv_action
 
 class ExtraFieldInline(SortableTabularInline):
     model = ExtraField
-    fields = ('label', 'fieldType', 'initial', 'required')
+    fields = ('label', 'fieldType', 'initial', 'css_class', 'required')
+    extra = 0
 
 
 class RemoteFormAdmin(NonSortableParentAdmin):
