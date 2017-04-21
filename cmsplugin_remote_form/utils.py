@@ -36,7 +36,7 @@ def autodiscover_templates():
     templates = []
 
     dirs_to_scan = [item for t in settings.TEMPLATES for item in t['DIRS']]
-    dirs_to_scan.append(os.path.join(os.path.dirname(__file__), 'templates/layout'))
+    dirs_to_scan.append(os.path.join(os.path.dirname(__file__), 'templates'))
 
     for dir in dirs_to_scan:
         found = glob.glob(os.path.join(dir, 'cmsplugin_remote_form/*.html'))
