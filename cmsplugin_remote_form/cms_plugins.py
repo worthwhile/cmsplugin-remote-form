@@ -1,3 +1,4 @@
+from django.core.mail import EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from cms.plugin_base import CMSPluginBase
@@ -51,20 +52,37 @@ class CMSRemoteFormPlugin(CMSPluginBase):
                 show_thanks = True
                 submitted_form.save_record(instance, ts)
                 response = submitted_form.post_to_remote(instance, request)
-                self.handle_response(instance, response)
+                self.handle_response(request, instance, response)
             else:
                 form = submitted_form
-
         context.update({
-            'contact': instance,
+            'object': instance,
             'form': form,
             'show_thanks': show_thanks
         })
         return context
 
-    def handle_response(self, instance, response):
-        test = "test"
+    def handle_response(self, request, instance, response):
+        if "success=false" in response.url:
+            if instance.error_notification_emails:
+                error_email_addresses = instance.error_notification_emails.split(',').strip()
+                message = EmailMultiAlternatives(
+                    "Form Submission Error",
+                    'There was a problem with a form-submission on %s' % request.build_absolute_uri(),
+                    'no-reply@worthwhile.com',
+                    error_email_addresses,
+                )
+                message.send()
+            self.failure_callback(instance, response)
+        if "success=true" in response.url:
+            self.success_callback(instance, response)
 
+    # Override these if you need to do extra stuff.
+    def success_callback(self, instance, response):
+        pass
+
+    def failure_callback(self, instance, response):
+        pass
 
 
 plugin_pool.register_plugin(CMSRemoteFormPlugin)
