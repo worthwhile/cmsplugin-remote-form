@@ -14,92 +14,78 @@ from cmsplugin_remote_form.utils import get_validators
 from localflavor.us.forms import USStateSelect
 
 
+
+
+
 class RemoteForm(forms.Form):
     required_css_class = getattr(settings, 'REMOTE_FORM_REQUIRED_CSS_CLASS', 'required')
 
+    def extraFieldFactory(self, extraField, formsFieldClass, **kwargs):
+        field_kwargs = {
+            'label': extraField.label,
+            'required': extraField.required,
+            'initial': extraField.initial,
+        }
+        field_kwargs.update(kwargs)
+        self.fields[extraField.name] = formsFieldClass(**field_kwargs)
+
     def __init__(self, contactFormInstance, request, *args, **kwargs):
         super(RemoteForm, self).__init__(*args, **kwargs)
+        self.object = contactFormInstance
         if 'instance' not in kwargs:
             for extraField in contactFormInstance.extrafield_set.all():
                 if extraField.fieldType == 'CharField':
-                    self.fields[slugify(extraField.label)] = forms.CharField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.CharField)
                 elif extraField.fieldType == 'BooleanField':
-                    self.fields[slugify(extraField.label)] = forms.BooleanField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.BooleanField)
                 elif extraField.fieldType == 'EmailField':
-                    self.fields[slugify(extraField.label)] = forms.EmailField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.EmailField)
                 elif extraField.fieldType == 'DecimalField':
-                    self.fields[slugify(extraField.label)] = forms.DecimalField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.DecimalField)
                 elif extraField.fieldType == 'FloatField':
-                    self.fields[slugify(extraField.label)] = forms.FloatField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
-                elif extraField.fieldType == 'FileField': 
-                    self.fields[slugify(extraField.label)] = forms.FileField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
-                elif extraField.fieldType == 'ImageField': 
-                    self.fields[slugify(extraField.label)] = forms.ImageField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.FloatField)
+                elif extraField.fieldType == 'FileField':
+                    self.extraFieldFactory(extraField, forms.FileField)
+                elif extraField.fieldType == 'ImageField':
+                    self.extraFieldFactory(extraField, forms.ImageField)
                 elif extraField.fieldType == 'IntegerField':
-                    self.fields[slugify(extraField.label)] = forms.IntegerField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.IntegerField)
                 elif extraField.fieldType == 'USStateSelect':
-                    self.fields[slugify(extraField.label)] = forms.CharField(widget=USStateSelect,
-                            label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.CharField, widget=USStateSelect)
                 elif extraField.fieldType == 'IPAddressField':
-                    self.fields[slugify(extraField.label)] = forms.IPAddressField(label=extraField.label,
-                            initial=extraField.initial,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.IPAddressField)
                 elif extraField.fieldType == 'auto_Textarea':
-                    self.fields[slugify(extraField.label)] = forms.CharField(label=extraField.label,
-                            initial=extraField.initial,
-                            widget=forms.Textarea,
-                            required=extraField.required)
+                    self.extraFieldFactory(extraField, forms.CharField, widget=forms.Textarea)
                 elif extraField.fieldType == 'auto_hidden_input':
-                    self.fields[slugify(extraField.label)] = forms.CharField(label=extraField.label,
-                            initial=extraField.initial,
-                            widget=forms.HiddenInput,
-                            required=False)
+                    self.extraFieldFactory(extraField, forms.CharField, widget=forms.HiddenInput, required=False)
                 elif extraField.fieldType == 'auto_referral_page':
                     lInitial = _("No referral available.")
                     if request:
                         lInitial = request.META.get('HTTP_REFERER', _('No referral available.'))
-                    self.fields[slugify(extraField.label)] = forms.CharField(label=extraField.label,
+                    self.fields[extraField.name] = forms.CharField(label=extraField.label,
                             initial=lInitial,  # NOTE: This overwrites extraField.initial!
                             widget=forms.HiddenInput,
                             required=False)
                 elif extraField.fieldType == 'MathCaptcha':
-                    self.fields[slugify(extraField.label)] = MathCaptchaField(
+                    self.fields[extraField.name] = MathCaptchaField(
                                                 label=extraField.label,
                                                 initial=extraField.initial,
                                                 required=True)
                 elif extraField.fieldType == 'ReCaptcha':
-                    self.fields[slugify(extraField.label)] = ReCaptchaField(
+                    self.fields[extraField.name] = ReCaptchaField(
                                                 label='',
                                                 initial=extraField.initial,
                                                 required=True)
                 elif extraField.fieldType == 'auto_GET_parameter':
                     lInitial = _("Key/value parameter not available.")
                     if request:
-                        lInitial = request.GET.get(slugify(extraField.label), 'n/a')
-                    self.fields[slugify(extraField.label)] = forms.CharField(label=extraField.label,
+                        lInitial = request.GET.get(extraField.name, 'n/a')
+                    self.fields[extraField.name] = forms.CharField(label=extraField.label,
                             initial=lInitial,  # NOTE: This overwrites extraField.initial!
                             widget=forms.HiddenInput,
                             required=False)
                 elif extraField.fieldType == 'CharFieldWithValidator':
-                    self.fields[slugify(extraField.label)] = forms.CharField(
+                    self.fields[extraField.name] = forms.CharField(
                         label=extraField.label,
                         initial=extraField.initial,
                         required=extraField.required,
