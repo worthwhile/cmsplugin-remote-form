@@ -1,7 +1,7 @@
 {% load l10n bootstrap3 sekizai_tags staticfiles %}
 
 {% if not show_thanks or object.thanks_in_modal %}
-    <form id="remote_form_{{ object.id }}" method="POST" action=""  data-parsley-validate
+    <form id="remote_form_{{ object.id }}" method="POST" action="" data-parsley-validate
           class="{% if form_layout %}form-{{ form_layout }}{% else %}form{% endif %}">
         {% csrf_token %}
         {% block fields %}
@@ -10,23 +10,28 @@
                     {% if form_layout %}
                         {% bootstrap_field field layout=form_layout field_class=object.field_class label_class=object.label_class placeholder=field.placeholder %}
                     {% else %}
-                        {% bootstrap_field field field_class=object.field_class label_class=object.label_class placeholder=field.placeholder  %}
+                        {% bootstrap_field field field_class=object.field_class label_class=object.label_class placeholder=field.placeholder %}
                     {% endif %}
                 {% endblock %}
             {% endfor %}
         {% endblock %}
-        {% if form_layout == 'horizontal' %}
-            <div class="form-group">
-                <div class="col-md-3"></div>
-                <div class="col-md-9">
-                    <input type="submit" class="btn btn-primary " name="remote_form_{{ object.id|unlocalize }}"
-                            {% if object.submit_button_text %}value="{{ object.submit_button_text }}"{% endif %} />
+        {% block button %}
+            {% if form_layout == 'horizontal' %}
+                <div class="form-group">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        <input type="submit" class="btn btn-primary " name="remote_form_{{ object.id|unlocalize }}"
+                               value="{{ object.submit_button_text|default:"submit" }}"/>
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+            {% else %}
+                <input type="submit" class="btn btn-primary " name="remote_form_{{ object.id|unlocalize }}"
+                               value="{{ object.submit_button_text|default:"submit" }}"/>
+            {% endif %}
+        {% endblock %}
     </form>
 {% else %}
-	{{ object.thanks|safe }}
+    {{ object.thanks|safe }}
 {% endif %}
 
 {% if show_thanks and object.thanks_in_modal %}
@@ -36,7 +41,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+                                aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         {{ object.thanks|safe }}
