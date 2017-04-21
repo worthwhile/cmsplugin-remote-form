@@ -1,5 +1,7 @@
 
 import requests
+from urlparse import urlparse, parse_qsl, urlunparse
+from urllib import urlencode
 
 from django import forms
 from django.template.defaultfilters import slugify
@@ -13,21 +15,21 @@ from cmsplugin_remote_form.models import RemoteForm as RemoteFormModel, ContactR
 from cmsplugin_remote_form.utils import get_validators
 from localflavor.us.forms import USStateSelect
 
-
-
-
-
 class RemoteForm(forms.Form):
     required_css_class = getattr(settings, 'REMOTE_FORM_REQUIRED_CSS_CLASS', 'required')
 
-    def extraFieldFactory(self, extraField, formsFieldClass, **kwargs):
+    def extra_field_factory(self, extraField, formsFieldClass, **kwargs):
         field_kwargs = {
             'label': extraField.label,
             'required': extraField.required,
             'initial': extraField.initial,
         }
         field_kwargs.update(kwargs)
-        self.fields[extraField.name] = formsFieldClass(**field_kwargs)
+
+        field_class_instance = formsFieldClass(**field_kwargs)
+        field_class_instance.object = extraField
+
+        self.fields[extraField.name] = field_class_instance
 
     def __init__(self, contactFormInstance, request, *args, **kwargs):
         super(RemoteForm, self).__init__(*args, **kwargs)
@@ -35,60 +37,64 @@ class RemoteForm(forms.Form):
         if 'instance' not in kwargs:
             for extraField in contactFormInstance.extrafield_set.all():
                 if extraField.fieldType == 'CharField':
-                    self.extraFieldFactory(extraField, forms.CharField)
+                    self.extra_field_factory(extraField, forms.CharField)
                 elif extraField.fieldType == 'BooleanField':
-                    self.extraFieldFactory(extraField, forms.BooleanField)
+                    self.extra_field_factory(extraField, forms.BooleanField)
                 elif extraField.fieldType == 'EmailField':
-                    self.extraFieldFactory(extraField, forms.EmailField)
+                    self.extra_field_factory(extraField, forms.EmailField)
                 elif extraField.fieldType == 'DecimalField':
-                    self.extraFieldFactory(extraField, forms.DecimalField)
+                    self.extra_field_factory(extraField, forms.DecimalField)
                 elif extraField.fieldType == 'FloatField':
-                    self.extraFieldFactory(extraField, forms.FloatField)
+                    self.extra_field_factory(extraField, forms.FloatField)
                 elif extraField.fieldType == 'FileField':
-                    self.extraFieldFactory(extraField, forms.FileField)
+                    self.extra_field_factory(extraField, forms.FileField)
                 elif extraField.fieldType == 'ImageField':
-                    self.extraFieldFactory(extraField, forms.ImageField)
+                    self.extra_field_factory(extraField, forms.ImageField)
                 elif extraField.fieldType == 'IntegerField':
-                    self.extraFieldFactory(extraField, forms.IntegerField)
+                    self.extra_field_factory(extraField, forms.IntegerField)
                 elif extraField.fieldType == 'USStateSelect':
-                    self.extraFieldFactory(extraField, forms.CharField, widget=USStateSelect)
+                    self.extra_field_factory(extraField, forms.CharField, widget=USStateSelect)
                 elif extraField.fieldType == 'IPAddressField':
-                    self.extraFieldFactory(extraField, forms.IPAddressField)
+                    self.extra_field_factory(extraField, forms.IPAddressField)
                 elif extraField.fieldType == 'auto_Textarea':
-                    self.extraFieldFactory(extraField, forms.CharField, widget=forms.Textarea)
+                    self.extra_field_factory(extraField, forms.CharField, widget=forms.Textarea)
                 elif extraField.fieldType == 'auto_hidden_input':
-                    self.extraFieldFactory(extraField, forms.CharField, widget=forms.HiddenInput, required=False)
+                    self.extra_field_factory(extraField, forms.CharField, widget=forms.HiddenInput, required=False)
                 elif extraField.fieldType == 'auto_referral_page':
                     lInitial = _("No referral available.")
                     if request:
                         lInitial = request.META.get('HTTP_REFERER', _('No referral available.'))
-                    self.fields[extraField.name] = forms.CharField(label=extraField.label,
-                            initial=lInitial,  # NOTE: This overwrites extraField.initial!
-                            widget=forms.HiddenInput,
-                            required=False)
+                    self.extra_field_factory(
+                        extraField,
+                        forms.CharField,
+                        initial=lInitial,  # NOTE: This overwrites extraField.initial!
+                        widget=forms.HiddenInput,
+                        required=False)
                 elif extraField.fieldType == 'MathCaptcha':
-                    self.fields[extraField.name] = MathCaptchaField(
-                                                label=extraField.label,
-                                                initial=extraField.initial,
-                                                required=True)
+                    self.extra_field_factory(
+                        extraField,
+                        MathCaptchaField,
+                        required=True)
                 elif extraField.fieldType == 'ReCaptcha':
-                    self.fields[extraField.name] = ReCaptchaField(
-                                                label='',
-                                                initial=extraField.initial,
-                                                required=True)
+                    self.extra_field_factory(
+                        extraField,
+                        ReCaptchaField,
+                        label='',
+                        required=True)
                 elif extraField.fieldType == 'auto_GET_parameter':
                     lInitial = _("Key/value parameter not available.")
                     if request:
                         lInitial = request.GET.get(extraField.name, 'n/a')
-                    self.fields[extraField.name] = forms.CharField(label=extraField.label,
-                            initial=lInitial,  # NOTE: This overwrites extraField.initial!
-                            widget=forms.HiddenInput,
-                            required=False)
+                    self.extra_field_factory(
+                        extraField,
+                        forms.CharField,
+                        initial=lInitial,
+                        widget=forms.HiddenInput,
+                        required=False)
                 elif extraField.fieldType == 'CharFieldWithValidator':
-                    self.fields[extraField.name] = forms.CharField(
-                        label=extraField.label,
-                        initial=extraField.initial,
-                        required=extraField.required,
+                    self.extra_field_factory(
+                        extraField,
+                        forms.CharField,
                         validators=get_validators())
 
     def save_record(self, instance, ts):
@@ -114,6 +120,15 @@ class RemoteForm(forms.Form):
             record.save()
 
     def post_to_remote(self, instance, request):
-        remote_url = instance.post_url
-        response = requests.post(remote_url, data=self.cleaned_data, headers={'referer': "asdf"})
+        url_parts = list(urlparse(instance.post_url))
+        query = dict(parse_qsl(url_parts[4]))
+        # Pardot specific... sorry :/
+        query.update({
+            'success_location': request.build_absolute_uri() + "?success=true",
+            'error_location': request.get_full_path() + "?success=false"
+        })
+        url_parts[4] = urlencode(query)
+        remote_url = urlunparse(url_parts)
+
+        response = requests.post(remote_url.geturl(), data=self.cleaned_data)
         return response
