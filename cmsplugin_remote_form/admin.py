@@ -8,7 +8,7 @@ from .actions import export_as_csv_action
 
 class ExtraFieldInline(SortableTabularInline):
     model = ExtraField
-    fields = ('label', 'fieldType', 'initial', 'css_class', 'required')
+    fields = ('label', 'name', 'placeholder', 'fieldType', 'css_class', 'required')
     extra = 0
 
 
