@@ -1,9 +1,0 @@
-{% include 'cmsplugin_remote_form/.base.html' %}
-
-{% block fields %}
-    <div class="row">
-        {% for field in form %}
-            {% bootstrap_field field layout='horizontal' form_group_class='form-group '+field.group_class %}
-        {% endfor %}
-    </div>
-{% endblock %}

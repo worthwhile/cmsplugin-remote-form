@@ -1,0 +1,13 @@
+{% extends 'cmsplugin_remote_form/.base.html' %}
+{% load bootstrap3 %}
+
+{% block fields %}
+    <div class="row">
+        {% for field in form %}
+            {# TODO - get this working... #}
+            {% with column_class=field.group_class|default:"col-sm-6" %}
+                {% bootstrap_field field form_group_class=column_class placeholder=field.placeholder  %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}
