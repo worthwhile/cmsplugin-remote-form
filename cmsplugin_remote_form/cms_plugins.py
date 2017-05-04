@@ -1,6 +1,9 @@
+import requests
+
 from django.core.mail import EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from django.urls import reverse
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
@@ -40,21 +43,23 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
         if request.method == "POST" and "remote_form_" + str(instance.id) in request.POST.keys():
             ts = str(int(time.time()))
-            submitted_form = RemoteFormForm(contactFormInstance=instance,
+            self.submitted_form = RemoteFormForm(contactFormInstance=instance,
                                   request=request,
                                   data=request.POST,
                                   files=request.FILES)
 
-            if submitted_form.is_valid():
+            if self.submitted_form.is_valid():
                 for fl in request.FILES:
                     for f in request.FILES.getlist(fl):
                         handle_uploaded_file(f, ts)
                 show_thanks = True
-                submitted_form.save_record(instance, ts)
-                response = submitted_form.post_to_remote(instance, request)
-                self.handle_response(request, instance, response)
+                self.instance = instance
+                self.request = request
+                self.saved_record = self.submitted_form.save_record(instance, ts)
+                self.remote_response = self.post_to_remote(instance, request, self.submitted_form.cleaned_data)
+                self.handle_response()
             else:
-                form = submitted_form
+                form = self.submitted_form
         context.update({
             'object': instance,
             'form': form,
@@ -62,26 +67,36 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         })
         return context
 
-    def handle_response(self, request, instance, response):
-        if "success=false" in response.url:
-            if instance.error_notification_emails:
-                error_email_addresses = instance.error_notification_emails.split(',').strip()
+    def handle_response(self):
+        if self.determine_success():
+            self.success_callback()
+        else:
+            if self.instance.error_notification_emails:
+                error_email_addresses = [x.strip() for x in self.instance.error_notification_emails.split(',')]
                 message = EmailMultiAlternatives(
                     "Form Submission Error",
-                    'There was a problem with a form-submission on %s' % request.build_absolute_uri(),
+                    'There was a problem with a form-submission on:\n\n%s\n\nView the record:\n\n%s' % (
+                        self.request.build_absolute_uri(),
+                        self.request.build_absolute_uri(reverse('admin:cmsplugin_remote_form_contactrecord_change', args=(self.saved_record.id,)))
+                    ),
                     'no-reply@worthwhile.com',
                     error_email_addresses,
                 )
                 message.send()
-            self.failure_callback(instance, response)
-        if "success=true" in response.url:
-            self.success_callback(instance, response)
+            self.failure_callback()
 
-    # Override these if you need to do extra stuff.
-    def success_callback(self, instance, response):
+    # Override these if you need to do different stuff.
+    def post_to_remote(self, instance, request, cleaned_data):
+        response = requests.post(instance.post_url, data=cleaned_data)
+        return response
+
+    def determine_success(self):
+        return "Please correct the following errors:" not in self.remote_response.content
+
+    def success_callback(self):
         pass
 
-    def failure_callback(self, instance, response):
+    def failure_callback(self):
         pass
 
 
