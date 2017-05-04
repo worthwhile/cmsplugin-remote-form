@@ -1,6 +1,6 @@
 {% load l10n bootstrap3 sekizai_tags staticfiles %}
 
-{% if not show_thanks or object.thanks_in_modal %}
+{% if object.thanks_in_modal or not show_thanks %}
     <form id="remote_form_{{ object.id }}" method="POST" action="" data-parsley-validate
           class="{% if form_layout %}form-{{ form_layout }}{% else %}form{% endif %}">
         {% csrf_token %}
@@ -35,7 +35,7 @@
 {% endif %}
 
 {% if show_thanks and object.thanks_in_modal %}
-    {% addtoblock 'js-external  ' %}
+    {% addtoblock 'js-external' %}
         <div class="modal fade" id="remote_form_{{ object.id }}_thanks_modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -50,6 +50,8 @@
                 </div>
             </div>
         </div>
+    {% endaddtoblock %}
+    {% addtoblock 'js' %}
         <script>
             $(window).load(function () {
                 $("#remote_form_{{ object.id }}_thanks_modal").modal();
