@@ -27,7 +27,7 @@ class RemoteForm(CMSPlugin):
                                           blank=True,
                                           max_length=30)
     thanks = models.TextField(_('Message displayed after submitting the contact form.'))
-    error_notification_emails = models.CharField('Email Errors To:', help_text='multiple emails separated by commas',
+    error_notification_emails = models.CharField(_('Email Errors To:'), help_text='multiple emails separated by commas',
                                                  max_length=250, blank=True, null=True)
     thanks_in_modal = models.BooleanField(_('Show Thanks In Modal'), default=True)
     collect_records = models.BooleanField(_('Collect Records'),
