@@ -1,7 +1,5 @@
 
-import requests
-from urlparse import urlparse, parse_qsl, urlunparse
-from urllib import urlencode
+
 
 from django import forms
 from django.template.defaultfilters import slugify
@@ -105,7 +103,7 @@ class RemoteForm(forms.Form):
             order = [field for field in order if field.fieldType not in excluded_field_types]
             ordered_dic_list = []
             for field in order:
-                key = slugify(field.label)
+                key = field.name
                 value = self.cleaned_data.get(key, '(no input)')
                 # redefine value for files...
                 if field.fieldType in ["FileField", "ImageField"]:
@@ -118,17 +116,5 @@ class RemoteForm(forms.Form):
 
             record = ContactRecord(contact_form=instance, data=ordered_dic_list)
             record.save()
-
-    def post_to_remote(self, instance, request):
-        url_parts = list(urlparse(instance.post_url))
-        query = dict(parse_qsl(url_parts[4]))
-        # Pardot specific... sorry :/
-        query.update({
-            'success_location': request.build_absolute_uri() + "?success=true",
-            'error_location': request.get_full_path() + "?success=false"
-        })
-        url_parts[4] = urlencode(query)
-        remote_url = urlunparse(url_parts)
-
-        response = requests.post(remote_url.geturl(), data=self.cleaned_data)
-        return response
+            return record
+        return False
