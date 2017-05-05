@@ -3,7 +3,11 @@ import requests
 from django.core.mail import EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.urls import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    # handle Django < 1.10
+    from django.core.urlresolvers import reverse
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
