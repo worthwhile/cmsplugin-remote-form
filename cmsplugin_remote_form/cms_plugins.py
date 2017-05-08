@@ -81,7 +81,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
                     "Form Submission Error",
                     'There was a problem with a form-submission on:\n%s\nView the record:\n%s\nContent:\n%s' % (
                         self.request.build_absolute_uri(),
-                        self.request.build_absolute_uri(reverse('admin:cmsplugin_remote_form_contactrecord_change', args=(self.saved_record.id,)))
+                        self.request.build_absolute_uri(reverse('admin:cmsplugin_remote_form_contactrecord_change', args=(self.saved_record.id,))),
                         self.remote_response.content
                     ),
                     'no-reply@worthwhile.com',
