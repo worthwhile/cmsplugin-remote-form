@@ -79,9 +79,10 @@ class CMSRemoteFormPlugin(CMSPluginBase):
                 error_email_addresses = [x.strip() for x in self.instance.error_notification_emails.split(',')]
                 message = EmailMultiAlternatives(
                     "Form Submission Error",
-                    'There was a problem with a form-submission on:\n\n%s\n\nView the record:\n\n%s' % (
+                    'There was a problem with a form-submission on:\n%s\nView the record:\n%s\nContent:\n%s' % (
                         self.request.build_absolute_uri(),
                         self.request.build_absolute_uri(reverse('admin:cmsplugin_remote_form_contactrecord_change', args=(self.saved_record.id,)))
+                        self.remote_response.content
                     ),
                     'no-reply@worthwhile.com',
                     error_email_addresses,
