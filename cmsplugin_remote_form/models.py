@@ -26,6 +26,7 @@ class RemoteForm(CMSPlugin):
     submit_button_text = models.CharField(_('Text for the Submit button.'),
                                           blank=True,
                                           max_length=30)
+    on_submit = models.CharField(null=True, blank=True, max_length=400, help_text="Google Analytics Code")
     thanks = models.TextField(_('Message displayed after submitting the contact form.'))
     error_notification_emails = models.CharField(_('Email Errors To:'), help_text='multiple emails separated by commas',
                                                  max_length=250, blank=True, null=True)

@@ -14,6 +14,7 @@
 {% block button %}
     <div class="text-center">
         <input type="submit" class="btn btn-primary " name="remote_form_{{ object.id|unlocalize }}"
-                               value="{{ object.submit_button_text|default:"submit" }}"/>
+               {% if object.on_submit %}onclick="{{ object.on_submit }}"{% endif %}
+               value="{{ object.submit_button_text|default:"submit" }}"/>
     </div>
 {% endblock %}
