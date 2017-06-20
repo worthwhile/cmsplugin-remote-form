@@ -92,8 +92,11 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
     # Override these if you need to do different stuff.
     def post_to_remote(self, instance, request, cleaned_data):
-        response = requests.post(instance.post_url, data=cleaned_data)
-        return response
+        try:
+            response = requests.post(instance.post_url, data=cleaned_data)
+            return response
+        except requests.ConnectionError, e:
+            print e
 
     def determine_success(self):
         return "Please correct the following errors:" not in self.remote_response.content
