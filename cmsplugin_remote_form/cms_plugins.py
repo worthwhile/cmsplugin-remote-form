@@ -72,7 +72,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         return context
 
     def handle_response(self):
-        if (not self.remote_response) and self.determine_success():
+        if self.remote_response and self.determine_success():
             self.success_callback()
         else:
             if self.instance.error_notification_emails:
