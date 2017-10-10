@@ -28,13 +28,29 @@ class RemoteForm(CMSPlugin):
                                           max_length=30)
     on_submit = models.CharField(null=True, blank=True, max_length=400, help_text="Google Analytics Code")
     thanks = models.TextField(_('Message displayed after submitting the contact form.'))
-    error_notification_emails = models.CharField(_('Email Errors To:'), help_text='multiple emails separated by commas',
-                                                 max_length=250, blank=True, null=True)
-    thanks_in_modal = models.BooleanField(_('Show Thanks In Modal'), default=True)
-    collect_records = models.BooleanField(_('Collect Records'),
-                                          default=True,
-                                          help_text=_(
-                                              "If active, all records for this Form will be stored in the Database."))
+    notification_emails = models.CharField(
+        _('Email Records To:'),
+        help_text=_('multiple emails separated by commas'),
+        max_length=250,
+        blank=True,
+        null=True
+    )
+    error_notification_emails = models.CharField(
+        _('Email Errors To:'),
+        help_text=_('multiple emails separated by commas'),
+        max_length=250,
+        blank=True,
+        null=True
+    )
+    thanks_in_modal = models.BooleanField(
+        _('Show Thanks In Modal'),
+        default=True
+    )
+    collect_records = models.BooleanField(
+        _('Collect Records'),
+        default=True,
+        help_text=_("If active, all records for this Form will be stored in the Database.")
+    )
     template = models.CharField(
         max_length=255,
         choices=TEMPLATE_CHOICES,
