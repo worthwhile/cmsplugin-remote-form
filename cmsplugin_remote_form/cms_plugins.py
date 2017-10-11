@@ -117,10 +117,12 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         if self.instance.notification_emails:
             email_addresses = [x.strip() for x in self.instance.notification_emails.split(',')]
             data = self.saved_record.data
+            data_dict = {k: v for d in data for k, v in d.items()}
+            content = ', '.join("%s=%r" % (key, val) for (key, val) in data_dict.items())
 
             message = EmailMultiAlternatives(
                 "Form Submission",
-                json.dumps(data, indent=4),
+                content,
                 'no-reply@worthwhile.com',
                 email_addresses,
             )
