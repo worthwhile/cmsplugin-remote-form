@@ -60,7 +60,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
                 self.instance = instance
                 self.request = request
                 self.saved_record = self.submitted_form.save_record(instance, ts)
-                self.notification_emails()
+                self.notification_emails(instance)
                 self.remote_response = self.post_to_remote(instance, request, self.submitted_form.cleaned_data)
                 self.handle_response()
             else:
@@ -113,15 +113,20 @@ class CMSRemoteFormPlugin(CMSPluginBase):
             )
             message.send()
 
-    def notification_emails(self):
+    def notification_emails(self, instance):
         if self.instance.notification_emails:
+            url = instance.page.get_public_url()
+            title = str(instance.page)
             email_addresses = [x.strip() for x in self.instance.notification_emails.split(',')]
             data = self.saved_record.data
             data_dict = {k: v for d in data for k, v in d.items()}
-            content = ', '.join("%s=%r" % (key, val) for (key, val) in data_dict.items())
+            content = u',\n'.join(
+                u"{key}: {val}".format(key=key, val=val) for (key, val) in data_dict.items()
+            )
+
 
             message = EmailMultiAlternatives(
-                "Form Submission",
+                "Form Submission on {title} ({url})".format(title=title, url=url),
                 content,
                 'no-reply@worthwhile.com',
                 email_addresses,
