@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 from django.core.mail import EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
@@ -60,6 +60,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
                 self.instance = instance
                 self.request = request
                 self.saved_record = self.submitted_form.save_record(instance, ts)
+                self.notification_emails()
                 self.remote_response = self.post_to_remote(instance, request, self.submitted_form.cleaned_data)
                 self.handle_response()
             else:
@@ -75,20 +76,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         if self.remote_response and self.determine_success():
             self.success_callback()
         else:
-            if self.instance.error_notification_emails:
-                error = self.remote_response.content if self.remote_response else "Connection Error"
-                error_email_addresses = [x.strip() for x in self.instance.error_notification_emails.split(',')]
-                message = EmailMultiAlternatives(
-                    "Form Submission Error",
-                    'There was a problem with a form-submission on:\n%s\nView the record:\n%s\nContent:\n%s' % (
-                        self.request.build_absolute_uri(),
-                        self.request.build_absolute_uri(reverse('admin:cmsplugin_remote_form_contactrecord_change', args=(self.saved_record.id,))),
-                        error
-                    ),
-                    'no-reply@worthwhile.com',
-                    error_email_addresses,
-                )
-                message.send()
+            self.error_notifications_emails()
             self.failure_callback()
 
     # Override these if you need to do different stuff.
@@ -107,6 +95,36 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
     def failure_callback(self):
         pass
+
+    def error_notifications_emails(self):
+        if self.instance.error_notification_emails:
+            error = self.remote_response.content if self.remote_response else "Connection Error"
+            error_email_addresses = [x.strip() for x in self.instance.error_notification_emails.split(',')]
+            message = EmailMultiAlternatives(
+                "Form Submission Error",
+                'There was a problem with a form-submission on:\n%s\nView the record:\n%s\nContent:\n%s' % (
+                    self.request.build_absolute_uri(),
+                    self.request.build_absolute_uri(
+                        reverse('admin:cmsplugin_remote_form_contactrecord_change', args=(self.saved_record.id,))),
+                    error
+                ),
+                'no-reply@worthwhile.com',
+                error_email_addresses,
+            )
+            message.send()
+
+    def notification_emails(self):
+        if self.instance.notification_emails:
+            email_addresses = [x.strip() for x in self.instance.notification_emails.split(',')]
+            data = self.saved_record.data
+
+            message = EmailMultiAlternatives(
+                "Form Submission",
+                json.dumps(data, indent=4),
+                'no-reply@worthwhile.com',
+                email_addresses,
+            )
+            message.send()
 
 
 plugin_pool.register_plugin(CMSRemoteFormPlugin)
