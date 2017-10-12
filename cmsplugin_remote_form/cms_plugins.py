@@ -118,10 +118,10 @@ class CMSRemoteFormPlugin(CMSPluginBase):
             url = instance.page.get_public_url()
             title = str(instance.page)
             email_addresses = [x.strip() for x in self.instance.notification_emails.split(',')]
-            data = self.saved_record.data
-            data_dict = {k: v for d in data for k, v in d.items()}
-            content = u',\n'.join(
-                u"{key}: {val}".format(key=key, val=val) for (key, val) in data_dict.items()
+
+            data = self.saved_record.get_ordered_data()
+            content = u'\n'.join(
+                u"{key}: {val}".format(key=key, val=val) for (key, val) in data.items()
             )
 
 

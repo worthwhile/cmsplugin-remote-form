@@ -1,4 +1,5 @@
 import threading
+from collections import OrderedDict
 
 from urlparse import urlparse
 from django.conf import settings
@@ -153,3 +154,18 @@ class ContactRecord(Model):
     def __str__(self):
         return _(u"Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
                                                                     'date': self.date_of_entry.strftime('%d. %b %Y')}
+
+    def get_ordered_data(self):
+        fields = self.contact_form.extrafield_set.all().order_by('inline_ordering_position')
+        data = self.combined_data_dict()
+        ordered_dict = OrderedDict()
+        for f in fields:
+            try:
+                ordered_dict.update({f.label: data[f.label]})
+            except Exception:
+                pass
+
+        return ordered_dict
+
+    def combined_data_dict(self):
+        return {k: v for d in self.data for k, v in d.items()}
