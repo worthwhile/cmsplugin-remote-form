@@ -1,5 +1,6 @@
 import requests, json
 
+from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
@@ -126,7 +127,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
 
             message = EmailMultiAlternatives(
-                "Form Submission on {title} ({url})".format(title=title, url=url),
+                "Form Submission on {title} ({url}) {now}".format(title=title, url=url, now=timezone.now()),
                 content,
                 'no-reply@worthwhile.com',
                 email_addresses,
