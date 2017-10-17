@@ -127,7 +127,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
 
             message = EmailMultiAlternatives(
-                "Form Submission on {title} ({url}) {now}".format(title=title, url=url, now=timezone.now()),
+                "Form Submission on {title} ({url}) {now}".format(title=title, url=url, now=timezone.localtime(timezone.now())),
                 content,
                 'no-reply@worthwhile.com',
                 email_addresses,
