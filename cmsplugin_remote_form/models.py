@@ -107,7 +107,7 @@ if recaptcha_installed():
 class ExtraField(SortableMixin):
     """
     """
-    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"))
+    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), on_delete=models.SET_NULL)
     label = models.CharField(_('Label'), max_length=100, null=True, blank=True)
     name = models.CharField(_('Name'), max_length=100, default='')
     fieldType = models.CharField(max_length=100, choices=FIELD_TYPE)
