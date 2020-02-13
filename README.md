@@ -96,7 +96,7 @@ If you are not using the default template settings of Django, make sure that  ``
 
 Please have a look at the latest commits for the work-in-progress development version.
 
-### 1.1 - Unreleased
+### 1.2 - Unreleased
 - Drop python 2 support
 - Drop support for django < 2.2
   
