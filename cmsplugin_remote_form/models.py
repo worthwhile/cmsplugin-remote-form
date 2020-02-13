@@ -152,7 +152,7 @@ class ContactRecord(Model):
             return False
 
     def __str__(self):
-        return _(u"Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
+        return _("Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
                                                                     'date': self.date_of_entry.strftime('%d. %b %Y')}
 
     def get_ordered_data(self):
@@ -168,4 +168,4 @@ class ContactRecord(Model):
         return ordered_dict
 
     def combined_data_dict(self):
-        return {k: v for d in self.data for k, v in d.items()}
+        return {k: v for d in self.data for k, v in list(d.items())}
