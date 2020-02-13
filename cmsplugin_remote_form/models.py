@@ -1,7 +1,7 @@
 import threading
 from collections import OrderedDict
 
-from urlparse import urlparse
+from urllib.parse import urlparse
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -107,7 +107,7 @@ if recaptcha_installed():
 class ExtraField(SortableMixin):
     """
     """
-    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"))
+    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), on_delete=models.SET_NULL)
     label = models.CharField(_('Label'), max_length=100, null=True, blank=True)
     name = models.CharField(_('Name'), max_length=100, default='')
     fieldType = models.CharField(max_length=100, choices=FIELD_TYPE)
