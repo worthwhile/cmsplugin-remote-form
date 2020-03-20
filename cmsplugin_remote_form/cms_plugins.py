@@ -89,7 +89,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
             print(e)
 
     def determine_success(self):
-        return "Please correct the following errors:" not in self.remote_response.content
+        return "Please correct the following errors:" not in self.remote_response.text
 
     def success_callback(self):
         pass
@@ -99,7 +99,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
     def error_notifications_emails(self):
         if self.instance.error_notification_emails:
-            error = self.remote_response.content if self.remote_response else "Connection Error"
+            error = self.remote_response.text if self.remote_response else "Connection Error"
             error_email_addresses = [x.strip() for x in self.instance.error_notification_emails.split(',')]
             message = EmailMultiAlternatives(
                 "Form Submission Error",
