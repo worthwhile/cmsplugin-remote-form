@@ -98,7 +98,9 @@ FIELD_TYPE = (('CharField', 'CharField'),
               ('auto_hidden_input', _('CharField as HiddenInput')),
               ('auto_referral_page', _('Referral page as HiddenInput')),
               ('auto_GET_parameter', _('GET parameter as HiddenInput')),
-              ('CharFieldWithValidator', 'CharFieldWithValidator'),)
+              ('CharFieldWithValidator', 'CharFieldWithValidator'),
+              ('ChoiceField', 'ChoiceField')
+              ,)
 if recaptcha_installed():
     FIELD_TYPE += (('ReCaptcha', 'reCAPTCHA'),)
 
@@ -107,11 +109,11 @@ if recaptcha_installed():
 class ExtraField(SortableMixin):
     """
     """
-    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), on_delete=models.SET_NULL)
+    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), on_delete=models.CASCADE)
     label = models.CharField(_('Label'), max_length=100, null=True, blank=True)
     name = models.CharField(_('Name'), max_length=100, default='')
     fieldType = models.CharField(max_length=100, choices=FIELD_TYPE)
-    initial = models.CharField(max_length=250, blank=True, null=True)
+    initial = models.CharField(max_length=4096, blank=True, null=True)
     placeholder = models.CharField(
         _('Placeholder'), max_length=250, blank=True, null=True)
     required = models.BooleanField(
