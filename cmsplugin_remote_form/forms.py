@@ -109,12 +109,14 @@ class RemoteForm(forms.Form):
                         extraField, forms.CharField, validators=get_validators()
                     )
                 elif extraField.fieldType == "ChoiceField":
+                    if extraField.initial:
+                        choices = [
+                            (c.strip(), c.strip()) for c in extraField.initial.split(",")
+                        ]
                     self.extra_field_factory(
                         extraField,
                         forms.ChoiceField,
-                        choices=[
-                            (c.strip(), c.strip()) for c in extraField.initial.split(",")
-                        ],
+                            choices=choices,
                     )
                     self.make_select2(extraField)
 
