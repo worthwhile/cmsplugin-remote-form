@@ -46,7 +46,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         if instance and instance.template:
             self.render_template = instance.template
 
-        if request.method == "POST" and "remote_form_" + str(instance.id) in request.POST.keys():
+        if request.method == "POST" and "remote_form_" + str(instance.id) in list(request.POST.keys()):
             ts = str(int(time.time()))
             self.submitted_form = RemoteFormForm(contactFormInstance=instance,
                                   request=request,
@@ -85,11 +85,11 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         try:
             response = requests.post(instance.post_url, data=cleaned_data)
             return response
-        except requests.ConnectionError, e:
-            print e
+        except requests.ConnectionError as e:
+            print(e)
 
     def determine_success(self):
-        return "Please correct the following errors:" not in self.remote_response.content
+        return "Please correct the following errors:" not in self.remote_response.text
 
     def success_callback(self):
         pass
@@ -99,7 +99,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
     def error_notifications_emails(self):
         if self.instance.error_notification_emails:
-            error = self.remote_response.content if self.remote_response else "Connection Error"
+            error = self.remote_response.text if self.remote_response else "Connection Error"
             error_email_addresses = [x.strip() for x in self.instance.error_notification_emails.split(',')]
             message = EmailMultiAlternatives(
                 "Form Submission Error",
@@ -121,8 +121,8 @@ class CMSRemoteFormPlugin(CMSPluginBase):
             email_addresses = [x.strip() for x in self.instance.notification_emails.split(',')]
 
             data = self.saved_record.get_ordered_data()
-            content = u'\n'.join(
-                u"{key}: {val}".format(key=key, val=val) for (key, val) in data.items()
+            content = '\n'.join(
+                "{key}: {val}".format(key=key, val=val) for (key, val) in list(data.items())
             )
 
 

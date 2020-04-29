@@ -107,7 +107,7 @@ if recaptcha_installed():
 class ExtraField(SortableMixin):
     """
     """
-    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), on_delete=models.SET_NULL)
+    form = models.ForeignKey(RemoteForm, verbose_name=_("Contact Form"), on_delete=models.CASCADE)
     label = models.CharField(_('Label'), max_length=100, null=True, blank=True)
     name = models.CharField(_('Name'), max_length=100, default='')
     fieldType = models.CharField(max_length=100, choices=FIELD_TYPE)
@@ -152,7 +152,7 @@ class ContactRecord(Model):
             return False
 
     def __str__(self):
-        return _(u"Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
+        return _("Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
                                                                     'date': self.date_of_entry.strftime('%d. %b %Y')}
 
     def get_ordered_data(self):
@@ -168,4 +168,4 @@ class ContactRecord(Model):
         return ordered_dict
 
     def combined_data_dict(self):
-        return {k: v for d in self.data for k, v in d.items()}
+        return {k: v for d in self.data for k, v in list(d.items())}
