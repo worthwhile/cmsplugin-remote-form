@@ -99,8 +99,8 @@ FIELD_TYPE = (('CharField', 'CharField'),
               ('auto_referral_page', _('Referral page as HiddenInput')),
               ('auto_GET_parameter', _('GET parameter as HiddenInput')),
               ('CharFieldWithValidator', 'CharFieldWithValidator'),
-              ('select_from_list', 'ChoiceField'),
-             )
+              ('ChoiceField', 'ChoiceField')
+              ,)
 if recaptcha_installed():
     FIELD_TYPE += (('ReCaptcha', 'reCAPTCHA'),)
 
@@ -113,7 +113,7 @@ class ExtraField(SortableMixin):
     label = models.CharField(_('Label'), max_length=100, null=True, blank=True)
     name = models.CharField(_('Name'), max_length=100, default='')
     fieldType = models.CharField(max_length=100, choices=FIELD_TYPE)
-    initial = models.CharField(max_length=250, blank=True, null=True)
+    initial = models.CharField(max_length=4096, blank=True, null=True)
     placeholder = models.CharField(
         _('Placeholder'), max_length=250, blank=True, null=True)
     required = models.BooleanField(
@@ -154,7 +154,7 @@ class ContactRecord(Model):
             return False
 
     def __str__(self):
-        return _("Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
+        return _(u"Record for %(contact)s recorded on %(date)s") % {'contact': self.contact_form,
                                                                     'date': self.date_of_entry.strftime('%d. %b %Y')}
 
     def get_ordered_data(self):
@@ -170,4 +170,4 @@ class ContactRecord(Model):
         return ordered_dict
 
     def combined_data_dict(self):
-        return {k: v for d in self.data for k, v in list(d.items())}
+        return {k: v for d in self.data for k, v in d.items()}
