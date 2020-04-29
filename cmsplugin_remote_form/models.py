@@ -98,7 +98,9 @@ FIELD_TYPE = (('CharField', 'CharField'),
               ('auto_hidden_input', _('CharField as HiddenInput')),
               ('auto_referral_page', _('Referral page as HiddenInput')),
               ('auto_GET_parameter', _('GET parameter as HiddenInput')),
-              ('CharFieldWithValidator', 'CharFieldWithValidator'),)
+              ('CharFieldWithValidator', 'CharFieldWithValidator'),
+              ('select_from_list', 'ChoiceField'),
+             )
 if recaptcha_installed():
     FIELD_TYPE += (('ReCaptcha', 'reCAPTCHA'),)
 
