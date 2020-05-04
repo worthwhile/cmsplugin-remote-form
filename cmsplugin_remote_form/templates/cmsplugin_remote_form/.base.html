@@ -52,12 +52,17 @@
                 </div>
             </div>
         </div>
-    {% endaddtoblock %}
-    {% addtoblock 'js' %}
         <script>
             $(window).load(function () {
                 $("#remote_form_{{ object.id }}_thanks_modal").modal();
             });
+        </script>
+    {% endaddtoblock %}
+{% endif %}
+{% if show_thanks and object.thanks_page %}
+    {% addtoblock 'js-external' %}
+        <script>
+            window.location.href = "{{ object.thanks_page.get_absolute_url }}{{ object.link_parameter }}";
         </script>
     {% endaddtoblock %}
 {% endif %}
