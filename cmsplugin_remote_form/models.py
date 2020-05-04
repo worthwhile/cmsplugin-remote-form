@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models import Model
 
+from cms.models.fields import PageField
 from cms.models import CMSPlugin
 from adminsortable.models import SortableMixin
 from jsonfield import JSONField
@@ -28,7 +29,14 @@ class RemoteForm(CMSPlugin):
                                           blank=True,
                                           max_length=30)
     on_submit = models.CharField(null=True, blank=True, max_length=400, help_text="Google Analytics Code")
-    thanks = models.TextField(_('Message displayed after submitting the contact form.'))
+    thanks = models.TextField(_('Message displayed after submitting the contact form.'), default="")
+    thanks_in_modal = models.BooleanField(
+        _('Show Thanks In Modal'),
+        default=True
+    )
+    thanks_page = PageField(null=True, blank=True, help_text="Page to display after submitting the contact form")
+    link_parameter = models.CharField(max_length=255, default="", help_text="Adds a custom parameter onto the thanks page link")
+
     notification_emails = models.CharField(
         _('Email Records To:'),
         help_text=_('multiple emails separated by commas'),
@@ -42,10 +50,6 @@ class RemoteForm(CMSPlugin):
         max_length=250,
         blank=True,
         null=True
-    )
-    thanks_in_modal = models.BooleanField(
-        _('Show Thanks In Modal'),
-        default=True
     )
     collect_records = models.BooleanField(
         _('Collect Records'),

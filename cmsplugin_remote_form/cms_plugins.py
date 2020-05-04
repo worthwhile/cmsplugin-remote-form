@@ -69,7 +69,7 @@ class CMSRemoteFormPlugin(CMSPluginBase):
         context.update({
             'object': instance,
             'form': form,
-            'show_thanks': show_thanks
+            'show_thanks': show_thanks,
         })
         return context
 
