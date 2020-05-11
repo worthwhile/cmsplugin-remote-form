@@ -23,20 +23,30 @@ TEMPLATE_CHOICES = localdata.TEMPLATE_CHOICES
 
 @python_2_unicode_compatible
 class RemoteForm(CMSPlugin):
-    post_url = models.CharField(_('Remote URL'), null=True, blank=False, max_length=200,
-                                default='#remoteURL')
+    post_url = models.CharField(_('Remote URL'), null=True, blank=True, max_length=200,
+        default="",
+        help_text="Post form data to remote endpoint"
+    )
     submit_button_text = models.CharField(_('Text for the Submit button.'),
-                                          blank=True,
-                                          max_length=30)
+        blank=True,
+        max_length=30
+    )
     on_submit = models.CharField(null=True, blank=True, max_length=400, help_text="Google Analytics Code")
-    thanks = models.TextField(_('Message displayed after submitting the contact form.'), default="")
+    thanks = models.TextField(_('Message displayed after submitting the contact form.'), 
+        default="",
+        null=True,
+        blank=True
+    )
     thanks_in_modal = models.BooleanField(
         _('Show Thanks In Modal'),
         default=True
     )
-    thanks_page = PageField(null=True, blank=True, help_text="Page to display after submitting the contact form")
-    link_parameter = models.CharField(max_length=255, default="", help_text="Adds a custom parameter onto the thanks page link")
-
+    thanks_page = PageField(null=True, blank=True, 
+        help_text="Page to display after submitting the contact form"
+    )
+    link_parameter = models.CharField(max_length=255, null=True, blank=True, default="", 
+        help_text="Adds a custom parameter onto the thanks page link"
+    )
     notification_emails = models.CharField(
         _('Email Records To:'),
         help_text=_('multiple emails separated by commas'),
