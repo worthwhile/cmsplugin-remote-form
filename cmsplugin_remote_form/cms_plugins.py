@@ -63,10 +63,10 @@ class CMSRemoteFormPlugin(CMSPluginBase):
                 self.saved_record = self.submitted_form.save_record(instance, ts)
                 self.notification_emails(instance)
 
-                if self.instance.post_url is not None:
+                if self.instance.post_url:
                     self.remote_response = self.post_to_remote(instance, request, self.submitted_form.cleaned_data)
-                  
-                self.handle_response()
+
+                    self.handle_response()
             else:
                 form = self.submitted_form
         context.update({
