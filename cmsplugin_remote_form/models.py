@@ -89,7 +89,7 @@ class RemoteForm(CMSPlugin):
         if self.post_url:
             url_obj = urlparse(self.post_url)
             return "Remote Form: %s - %s" % (url_obj.netloc, url_obj.path)
-        return _("Remote Form")
+        return "Remote Form"
 
 
 def recaptcha_installed():
