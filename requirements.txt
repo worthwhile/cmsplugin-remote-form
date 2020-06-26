@@ -1,6 +1,5 @@
 django-cms
 django-admin-sortable
-django-simple-math-captcha
 jsonfield
 django-localflavor
 six
