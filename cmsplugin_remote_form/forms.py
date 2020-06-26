@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 from localflavor.us.forms import USStateSelect
-from simplemathcaptcha.fields import MathCaptchaField
 
 from cmsplugin_remote_form.models import ContactRecord, RemoteForm as RemoteFormModel
 from cmsplugin_remote_form.utils import get_validators
@@ -85,10 +84,6 @@ class RemoteForm(forms.Form):
                         widget=forms.HiddenInput,
                         required=False,
                     )
-                elif extraField.fieldType == "MathCaptcha":
-                    self.extra_field_factory(
-                        extraField, MathCaptchaField, required=True
-                    )
                 elif extraField.fieldType == "ReCaptcha":
                     self.extra_field_factory(
                         extraField, ReCaptchaField, label="", required=True
@@ -128,7 +123,7 @@ class RemoteForm(forms.Form):
             order = RemoteFormModel.objects.get(id=instance.id).extrafield_set.order_by(
                 "inline_ordering_position"
             )
-            excluded_field_types = ["MathCaptcha", "ReCaptcha"]
+            excluded_field_types = ["ReCaptcha"]
             order = [
                 field for field in order if field.fieldType not in excluded_field_types
             ]
