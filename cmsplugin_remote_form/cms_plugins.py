@@ -122,8 +122,13 @@ class CMSRemoteFormPlugin(CMSPluginBase):
 
     def notification_emails(self, instance):
         if self.instance.notification_emails:
-            url = instance.page.get_public_url()
-            title = str(instance.page)
+            if instance.page:
+                url = instance.page.get_public_url()
+                title = str(instance.page)
+            else:
+                # if being rendered from modal or context without page instance
+                url = self.request.build_absolute_uri()
+                title = "Form Submission"
             email_addresses = [x.strip() for x in self.instance.notification_emails.split(',')]
 
             data = self.saved_record.get_ordered_data()
