@@ -1,4 +1,5 @@
 from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 from django import forms
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -86,7 +87,11 @@ class RemoteForm(forms.Form):
                     )
                 elif extraField.fieldType == "ReCaptcha":
                     self.extra_field_factory(
-                        extraField, ReCaptchaField, label="", required=True
+                        extraField, 
+                        ReCaptchaField,
+                        widget=ReCaptchaV3,
+                        label="", 
+                        required=True
                     )
                 elif extraField.fieldType == "auto_GET_parameter":
                     lInitial = _("Key/value parameter not available.")

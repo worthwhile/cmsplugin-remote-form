@@ -62,7 +62,7 @@
 {% if show_thanks and object.thanks_page %}
     {% addtoblock 'js-external' %}
         <script>
-            window.location.href = "{{ object.thanks_page.get_absolute_url }}{{ object.link_parameter }}";
+            window.location.href = "{{ object.thanks_page.get_absolute_url }}{% if object.link_parameter %}{{ object.link_parameter }}{% endif %}";
         </script>
     {% endaddtoblock %}
 {% endif %}
